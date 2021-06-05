@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>596407701694-sqb9bb1kq8oklc6r3unuo8n0ubi0dmsm.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.596407701694-sqb9bb1kq8oklc6r3unuo8n0ubi0dmsm</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>596407701694-23odgjsj54tjll2bvn9lom5u519a4rrr.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAv0j7ZWivGuxuBUkyka-sd8vYWz_ESiyw</string>
+	<key>GCM_SENDER_ID</key>
+	<string>596407701694</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.managementOfScientificResearchProjectOfPtithcm</string>
+	<key>PROJECT_ID</key>
+	<string>ptit-scientific-research</string>
+	<key>STORAGE_BUCKET</key>
+	<string>ptit-scientific-research.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:596407701694:ios:13d60790246e89ae28ceef</string>
+	<key>DATABASE_URL</key>
+	<string>https://ptit-scientific-research-default-rtdb.firebaseio.com</string>
+</dict>
+</plist>
