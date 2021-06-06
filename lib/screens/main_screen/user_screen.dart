@@ -1,10 +1,14 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/controller/image_controller.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/repositories/user_repository.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/widgets/drawer_widget.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/widgets/image_pick_and_crop/image_picker_handler.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/widgets/widget_circular_animation.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class UserScreen extends StatefulWidget {
   @override
@@ -13,9 +17,10 @@ class UserScreen extends StatefulWidget {
 
 class _UserScreenState extends State<UserScreen>
     with TickerProviderStateMixin, ImagePickerListener {
-  File _image;
+  String imageUrl;
   AnimationController _controller;
   ImagePickerHandler imagePicker;
+  UserRepository userRepository;
 
   TextEditingController _nameController;
   TextEditingController _birthdayController;
@@ -31,6 +36,7 @@ class _UserScreenState extends State<UserScreen>
 
     imagePicker = ImagePickerHandler(this, _controller);
     imagePicker.init();
+    userRepository = UserRepository();
 
     _nameController = TextEditingController(
         text: FirebaseAuth.instance.currentUser.displayName);
@@ -140,6 +146,12 @@ class _UserScreenState extends State<UserScreen>
   }
 
   Stack headerScreen(BuildContext context) {
+    UserRepository userRepository = UserRepository();
+    getAvatar() async {
+      return await userRepository
+          .getPhoto('user/${FirebaseAuth.instance.currentUser.uid}');
+    }
+
     return Stack(
       children: [
         Container(
@@ -193,19 +205,30 @@ class _UserScreenState extends State<UserScreen>
                       shape: BoxShape.circle, color: Colors.grey[200]),
                   child: Stack(
                     children: [
-                      _image == null
-                          ? CircleAvatar(
-                              radius: 60,
-                              backgroundImage: NetworkImage(
-                                  FirebaseAuth.instance.currentUser.photoURL),
-                            )
-                          : CircleAvatar(
-                              radius: 60.0,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(80),
-                                child: Image.file(_image),
-                              ),
-                            ),
+                      FutureBuilder(
+                          future: getAvatar(),
+                          builder: (context, snapshot) {
+                            return ClipRRect(
+                              borderRadius: BorderRadius.circular(60),
+                              child: snapshot.data == null
+                                  ? CircleAvatar(
+                                      radius: 60,
+                                      child: CachedNetworkImage(
+                                        imageUrl: imageUrlLogo,
+                                        placeholder: (context, url) =>
+                                            CircularProgressIndicator(),
+                                      ),
+                                    )
+                                  : CircleAvatar(
+                                      radius: 60,
+                                      child: CachedNetworkImage(
+                                        imageUrl: snapshot.data,
+                                        placeholder: (context, url) =>
+                                            CircularProgressIndicator(),
+                                      ),
+                                    ),
+                            );
+                          }),
                       Align(
                         alignment: Alignment.bottomRight,
                         child: GestureDetector(
@@ -243,9 +266,9 @@ class _UserScreenState extends State<UserScreen>
   }
 
   @override
-  userImage(File _image) {
-    setState(() {
-      this._image = _image;
-    });
+  userImage(File _image) async {
+    imageUrl = await userRepository.uploadPhoto(
+        _image, 'user/${FirebaseAuth.instance.currentUser.uid}');
+    setState(() {});
   }
 }

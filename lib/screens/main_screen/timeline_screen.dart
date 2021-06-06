@@ -50,9 +50,12 @@ class _TimelinePageState extends State<TimelinePage>
         backgroundColor: Colors.transparent,
         elevation: 0.0,
         actions: [
-          IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () {},
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: GestureDetector(
+              child: Icon(Icons.add),
+              onTap: () {},
+            ),
           ),
         ],
         bottom: PreferredSize(

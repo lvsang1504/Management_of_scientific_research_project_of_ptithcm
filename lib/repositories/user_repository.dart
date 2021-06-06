@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class UserRepository {
   final FirebaseAuth _firebaseAuth;
@@ -52,5 +55,27 @@ class UserRepository {
 
   Future<User> getUser() async {
     return await _firebaseAuth.currentUser;
+  }
+
+  Future<String> uploadPhoto(File file, String path) async {
+    try {
+      final ref = firebase_storage.FirebaseStorage.instance.ref(path);
+      final uploadTask = ref.putFile(file);
+      await uploadTask;
+      return await ref.getDownloadURL();
+    } on FirebaseException catch (e) {
+      print("Error: $e");
+    }
+    return null;
+  }
+
+  Future<String> getPhoto(String path) async {
+    try {
+      final ref = firebase_storage.FirebaseStorage.instance.ref(path);
+      return await ref.getDownloadURL();
+    } on FirebaseException catch (e) {
+      print("Error: $e");
+    }
+    return null;
   }
 }

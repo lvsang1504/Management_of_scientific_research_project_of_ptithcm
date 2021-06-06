@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -7,11 +8,15 @@ import 'package:management_of_scientific_research_project_of_ptithcm/bloc/theme/
 import 'package:management_of_scientific_research_project_of_ptithcm/bloc/theme/setting_cubit.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/blocs/authentication_bloc/authentication_bloc.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/blocs/authentication_bloc/authentication_event.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/repositories/user_repository.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/screens/setting_screen/font_size_setting_screen.dart';
 
 Widget buildDrawer(BuildContext context) {
-  final String imageDefault =
-      "https://firebasestorage.googleapis.com/v0/b/ptit-scientific-research.appspot.com/o/logo.png?alt=media&token=423d8506-40a7-4257-b5a6-9888d385a78e";
+  UserRepository userRepository = UserRepository();
+  getAvatar() async {
+    return await userRepository
+        .getPhoto('user/${FirebaseAuth.instance.currentUser.uid}');
+  }
 
   return Theme(
     data: Theme.of(context).copyWith(
@@ -43,21 +48,38 @@ Widget buildDrawer(BuildContext context) {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(50),
-                          child: Image.network(
-                            "${FirebaseAuth.instance.currentUser.photoURL ?? imageDefault}",
-                          ),
-                        ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: FutureBuilder(
+                            future: getAvatar(),
+                            builder: (context, snapshot) {
+                              return Container(
+                                height: 100,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(60),
+                                  child: snapshot.data != null
+                                      ? CachedNetworkImage(
+                                          imageUrl: snapshot.data.toString(),
+                                          fit: BoxFit.cover,
+                                          placeholder: (context, url) => CircularProgressIndicator(),
+                                        )
+                                      : CachedNetworkImage(
+                                          imageUrl: FirebaseAuth
+                                              .instance.currentUser.photoURL,
+                                          fit: BoxFit.cover,
+                                          placeholder: (context, url) => CircularProgressIndicator(),
+                                        ),
+                                ),
+                              );
+                            }),
                       ),
-                      SizedBox(
-                        height: 5,
-                      ),
+                     SizedBox(height: 5.0,),
+
+
                       Text(
                         "${FirebaseAuth.instance.currentUser.displayName ?? "User"}",
                         style: TextStyle(
