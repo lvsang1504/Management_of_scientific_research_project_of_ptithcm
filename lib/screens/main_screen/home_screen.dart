@@ -1,10 +1,14 @@
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/blocs/data_bloc/get_topics_bloc.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/models/home_list.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/models/hotel_list_data.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/models/topic.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/models/topic_reponse.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/widgets/drawer_widget.dart';
 
+int countFound;
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -17,10 +21,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   final ScrollController _scrollController = ScrollController();
   bool multiple = true;
 
+
   @override
   void initState() {
     animationController = AnimationController(
         duration: const Duration(milliseconds: 2000), vsync: this);
+    topicsBloc.getTopics();
     super.initState();
   }
 
@@ -74,7 +80,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                           floating: true,
                           delegate: ContestTabHeader(
                             getFilterBarUI(
-                              title: "530 hoteld found",
+                              title: "${countFound??""} topics found",
                             ),
                           ),
                         ),
@@ -105,32 +111,35 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
-                  child: FutureBuilder(
-                    future: getData(),
-                    builder: (context, snapshot) {
+                  child: StreamBuilder<TopicResponse>(
+                    stream: topicsBloc.subject.stream,
+                    builder: (BuildContext context,
+                        AsyncSnapshot<TopicResponse> snapshot) {
                       if (!snapshot.hasData) {
                         return const SizedBox();
                       } else {
+                        List<Topic> topics = snapshot.data.topics;
+
                         return GridView(
                           padding: const EdgeInsets.only(
                               top: 0, left: 12, right: 12),
                           physics: const BouncingScrollPhysics(),
                           scrollDirection: Axis.vertical,
                           children:
-                              List<Widget>.generate(homeList.length, (index) {
-                            final int count = homeList.length;
+                              List<Widget>.generate(topics.length, (index) {
+                            countFound = topics.length;
                             final Animation<double> animation =
                                 Tween<double>(begin: 0.0, end: 1.0)
                                     .animate(CurvedAnimation(
                               parent: animationController,
-                              curve: Interval((1 / count) * index, 1.0,
+                              curve: Interval((1 / countFound) * index, 1.0,
                                   curve: Curves.fastOutSlowIn),
                             ));
                             animationController.forward();
                             return HomeListView(
                               animation: animation,
                               animationController: animationController,
-                              listData: homeList[index],
+                              topic: topics[index],
                               callback: () {
                                 Navigator.push(
                                   context,
@@ -365,13 +374,13 @@ class ItemButton extends StatelessWidget {
 class HomeListView extends StatelessWidget {
   const HomeListView({
     Key key,
-    this.listData,
+    this.topic,
     this.callback,
     this.animationController,
     this.animation,
   }) : super(key: key);
 
-  final HomeList listData;
+  final Topic topic;
   final VoidCallback callback;
   final AnimationController animationController;
   final Animation animation;
@@ -393,10 +402,12 @@ class HomeListView extends StatelessWidget {
                 child: Stack(
                   alignment: AlignmentDirectional.center,
                   children: [
-                    Image.asset(
-                      listData.imagePath,
-                      fit: BoxFit.cover,
-                    ),
+                    topic.image != null
+                        ? CachedNetworkImage(
+                            imageUrl: topic.image,
+                            fit: BoxFit.cover,
+                          )
+                        : Image.asset("assets/images/research-techniques.jpg"),
                     Material(
                       color: Colors.transparent,
                       child: InkWell(
@@ -484,7 +495,6 @@ class _GridFunctionState extends State<GridFunction> {
                     icon: Icons.handyman,
                     title: "dsaf",
                   ),
-                 
                   ItemButton(
                     icon: Icons.handyman,
                     title: "dsaf",
