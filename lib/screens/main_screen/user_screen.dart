@@ -8,7 +8,6 @@ import 'package:management_of_scientific_research_project_of_ptithcm/repositorie
 import 'package:management_of_scientific_research_project_of_ptithcm/widgets/drawer_widget.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/widgets/image_pick_and_crop/image_picker_handler.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/widgets/widget_circular_animation.dart';
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class UserScreen extends StatefulWidget {
   @override
