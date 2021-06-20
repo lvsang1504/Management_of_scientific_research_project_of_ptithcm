@@ -11,6 +11,11 @@ class TopicsListBloc {
     _subject.sink.add(response);
   }
 
+  getSearchTopics(String key) async {
+    TopicResponse response = await _repository.getSearchTopics(key);
+    _subject.sink.add(response);
+  }
+
   dispose() {
     _subject.close();
   }

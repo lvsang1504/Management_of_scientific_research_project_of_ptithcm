@@ -65,21 +65,27 @@ Widget buildDrawer(BuildContext context) {
                                       ? CachedNetworkImage(
                                           imageUrl: snapshot.data.toString(),
                                           fit: BoxFit.cover,
-                                          placeholder: (context, url) => CircularProgressIndicator(),
+                                          placeholder: (context, url) =>
+                                              CircularProgressIndicator(
+                                            backgroundColor: Colors.blueGrey,
+                                          ),
                                         )
                                       : CachedNetworkImage(
                                           imageUrl: FirebaseAuth
                                               .instance.currentUser.photoURL,
                                           fit: BoxFit.cover,
-                                          placeholder: (context, url) => CircularProgressIndicator(),
+                                          placeholder: (context, url) =>
+                                              CircularProgressIndicator(
+                                            backgroundColor: Colors.blueGrey,
+                                          ),
                                         ),
                                 ),
                               );
                             }),
                       ),
-                     SizedBox(height: 5.0,),
-
-
+                      SizedBox(
+                        height: 5.0,
+                      ),
                       Text(
                         "${FirebaseAuth.instance.currentUser.displayName ?? "User"}",
                         style: TextStyle(

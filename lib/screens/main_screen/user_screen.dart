@@ -215,7 +215,7 @@ class _UserScreenState extends State<UserScreen>
                                       child: CachedNetworkImage(
                                         imageUrl: imageUrlLogo,
                                         placeholder: (context, url) =>
-                                            CircularProgressIndicator(),
+                                            CircularProgressIndicator(backgroundColor: Colors.blueGrey,),
                                       ),
                                     )
                                   : CircleAvatar(
@@ -223,7 +223,7 @@ class _UserScreenState extends State<UserScreen>
                                       child: CachedNetworkImage(
                                         imageUrl: snapshot.data,
                                         placeholder: (context, url) =>
-                                            CircularProgressIndicator(),
+                                            CircularProgressIndicator(backgroundColor: Colors.blueGrey,),
                                       ),
                                     ),
                             );

@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/bloc/theme/theme_state.dart';
-import 'package:management_of_scientific_research_project_of_ptithcm/models/topic.dart';
-import 'package:management_of_scientific_research_project_of_ptithcm/models/topic_reponse.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/repositories/user_repository.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/screens/bottom_navigation.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/screens/login/login_screen.dart';
@@ -16,16 +14,16 @@ import 'blocs/authentication_bloc/authentication_bloc.dart';
 import 'blocs/authentication_bloc/authentication_event.dart';
 import 'blocs/authentication_bloc/authentication_state.dart';
 
-
-class MyHttpOverrides extends HttpOverrides{
+class MyHttpOverrides extends HttpOverrides {
   @override
-  HttpClient createHttpClient(SecurityContext context){
+  HttpClient createHttpClient(SecurityContext context) {
     return super.createHttpClient(context)
-      ..badCertificateCallback = (X509Certificate cert, String host, int port)=> true;
-    }
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
   }
-void main() async {
+}
 
+void main() async {
   HttpOverrides.global = new MyHttpOverrides();
 
   //WidgetsFlutterBinding.ensureInitialized();
@@ -69,7 +67,6 @@ class MyApp extends StatelessWidget {
                       userRepository: _userRepository,
                     );
                   }
-
                   if (state is AuthenticationSuccess) {
                     return BottomNavigationWidget();
                   }

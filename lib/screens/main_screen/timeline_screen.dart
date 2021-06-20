@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/models/data_timeline.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/widgets/drawer_widget.dart';
@@ -119,7 +120,7 @@ class _TimelinePageState extends State<TimelinePage>
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                Image.network(doodle.doodle),
+                CachedNetworkImage(imageUrl: doodle.doodle),
                 const SizedBox(
                   height: 8.0,
                 ),
@@ -138,8 +139,9 @@ class _TimelinePageState extends State<TimelinePage>
               ],
             ),
           ),
-        ),
-        onTap: (){print(doodle.time);},
+        ), onTap: () {
+      print(doodle.time);
+    },
         position:
             i % 2 == 0 ? TimelineItemPosition.right : TimelineItemPosition.left,
         isFirst: i == 0,

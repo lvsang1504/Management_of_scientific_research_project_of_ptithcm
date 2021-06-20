@@ -5,10 +5,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'image_picker_handler.dart';
 
-
 // ignore: must_be_immutable
 class ImagePickerDialog extends StatelessWidget {
-
   ImagePickerHandler _listener;
   AnimationController _controller;
   BuildContext context;
@@ -19,14 +17,14 @@ class ImagePickerDialog extends StatelessWidget {
   Animation<Offset> _drawerDetailsPosition;
 
   void initState() {
-    _drawerContentsOpacity =  CurvedAnimation(
-      parent:  ReverseAnimation(_controller),
+    _drawerContentsOpacity = CurvedAnimation(
+      parent: ReverseAnimation(_controller),
       curve: Curves.fastOutSlowIn,
     );
-    _drawerDetailsPosition =  Tween<Offset>(
+    _drawerDetailsPosition = Tween<Offset>(
       begin: const Offset(0.0, 1.0),
       end: Offset.zero,
-    ).animate( CurvedAnimation(
+    ).animate(CurvedAnimation(
       parent: _controller,
       curve: Curves.fastOutSlowIn,
     ));
@@ -41,13 +39,13 @@ class ImagePickerDialog extends StatelessWidget {
     _controller.forward();
     showDialog(
       context: context,
-      builder: (BuildContext context) =>  SlideTransition(
-            position: _drawerDetailsPosition,
-            child:  FadeTransition(
-              opacity:  ReverseAnimation(_drawerContentsOpacity),
-              child: this,
-            ),
-          ),
+      builder: (BuildContext context) => SlideTransition(
+        position: _drawerDetailsPosition,
+        child: FadeTransition(
+          opacity: ReverseAnimation(_drawerContentsOpacity),
+          child: this,
+        ),
+      ),
     );
   }
 
@@ -56,8 +54,8 @@ class ImagePickerDialog extends StatelessWidget {
   }
 
   startTime() async {
-    var _duration =  Duration(milliseconds: 200);
-    return  Timer(_duration, navigationPage);
+    var _duration = Duration(milliseconds: 200);
+    return Timer(_duration, navigationPage);
   }
 
   void navigationPage() {
@@ -72,39 +70,39 @@ class ImagePickerDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     this.context = context;
-    return  Material(
+    return Material(
         type: MaterialType.transparency,
-        child:  Opacity(
+        child: Opacity(
           opacity: 1.0,
-          child:  Container(
+          child: Container(
             padding: EdgeInsets.fromLTRB(30.0, 0.0, 30.0, 20.0),
             child: Column(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-                 GestureDetector(
+                GestureDetector(
                   onTap: () => _listener.openCamera(),
                   child: roundedButton(
                       "Camera",
                       EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
-                      const Color(0xFF48bfe3),
-                      const Color(0xFFFFFFFF),
+                      Theme.of(context).buttonColor,
+                      Colors.black,
                       Icons.camera_alt_outlined),
                 ),
-                 GestureDetector(
+                GestureDetector(
                   onTap: () => _listener.openGallery(),
                   child: roundedButton(
                       "Gallery",
                       EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
-                      const Color(0xFF48bfe3),
-                      const Color(0xFFFFFFFF),
+                      Theme.of(context).buttonColor,
+                      Colors.black,
                       Icons.photo_library),
                 ),
                 const SizedBox(height: 15.0),
-                 GestureDetector(
+                GestureDetector(
                   onTap: () => dismissDialog(),
-                  child:  Padding(
-                    padding: EdgeInsets.fromLTRB(30.0, 0.0, 30.0, 0.0),
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(60.0, 0.0, 60.0, 0.0),
                     child: roundedButton(
                         "Cancel",
                         EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
@@ -119,18 +117,18 @@ class ImagePickerDialog extends StatelessWidget {
         ));
   }
 
-  Widget roundedButton(
-      String buttonLabel, EdgeInsets margin, Color bgColor, Color textColor, IconData icon) {
-    var loginBtn =  Container(
+  Widget roundedButton(String buttonLabel, EdgeInsets margin, Color bgColor,
+      Color textColor, IconData icon) {
+    var loginBtn = Container(
       margin: margin,
       padding: EdgeInsets.all(15.0),
       alignment: FractionalOffset.center,
-      decoration:  BoxDecoration(
+      decoration: BoxDecoration(
         color: bgColor,
-        borderRadius:  BorderRadius.all(const Radius.circular(100.0)),
+        borderRadius: BorderRadius.all(const Radius.circular(100.0)),
         boxShadow: <BoxShadow>[
           BoxShadow(
-            color:  Colors.white38,
+            color: Colors.white38,
             offset: Offset(1.0, 6.0),
             blurRadius: 0.001,
           ),
@@ -139,11 +137,17 @@ class ImagePickerDialog extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, size: 20,color: textColor,),
-          SizedBox(width: 15,),
+          Icon(
+            icon,
+            size: 20,
+            color: textColor,
+          ),
+          SizedBox(
+            width: 15,
+          ),
           Text(
             buttonLabel,
-            style:  TextStyle(
+            style: TextStyle(
                 color: textColor, fontSize: 20.0, fontWeight: FontWeight.bold),
           ),
         ],
@@ -151,5 +155,4 @@ class ImagePickerDialog extends StatelessWidget {
     );
     return loginBtn;
   }
-
 }

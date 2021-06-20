@@ -1,26 +1,32 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/blocs/data_bloc/get_topics_bloc.dart';
-import 'package:management_of_scientific_research_project_of_ptithcm/models/home_list.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/models/hotel_list_data.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/models/topic.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/models/topic_reponse.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/screens/search_screen.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/screens/topic_screen.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/widgets/drawer_widget.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/widgets/home_list_view.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 int countFound;
+
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
-  List<HomeList> homeList = HomeList.homeList;
   AnimationController animationController;
   List<HotelListData> hotelList = HotelListData.hotelList;
   final ScrollController _scrollController = ScrollController();
+  final RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
+  TextEditingController searchController = TextEditingController();
   bool multiple = true;
-
 
   @override
   void initState() {
@@ -39,6 +45,17 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   void dispose() {
     animationController.dispose();
     super.dispose();
+  }
+
+  void _onRefresh() async {
+    await Future.delayed(const Duration(milliseconds: 3000));
+    _refreshController.refreshCompleted();
+  }
+
+  void _onLoading() {
+    topicsBloc.getTopics();
+    if (mounted) setState(() {});
+    _refreshController.loadComplete();
   }
 
   @override
@@ -80,7 +97,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                           floating: true,
                           delegate: ContestTabHeader(
                             getFilterBarUI(
-                              title: "${countFound??""} topics found",
+                              title: "${countFound ?? ""} topics found",
                             ),
                           ),
                         ),
@@ -98,11 +115,22 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   Widget buildTopics() {
+    final spinkit = SpinKitCircle(
+      color: Colors.cyan,
+      size: 50.0,
+      controller: AnimationController(
+          vsync: this, duration: const Duration(milliseconds: 1200)),
+    );
     return FutureBuilder<bool>(
       future: getData(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return const SizedBox();
+          return FutureBuilder<Object>(
+              future: Future.delayed(Duration(seconds: 5)),
+              builder: (context, snapshot) {
+                topicsBloc.getTopics();
+                return SizedBox();
+              });
         } else {
           return Padding(
             padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
@@ -116,50 +144,88 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     builder: (BuildContext context,
                         AsyncSnapshot<TopicResponse> snapshot) {
                       if (!snapshot.hasData) {
-                        return const SizedBox();
+                        return Center(
+                            child: SizedBox(
+                          height: 70,
+                          child: Column(
+                            children: [
+                              spinkit,
+                              Spacer(),
+                              Text("Loading..."),
+                            ],
+                          ),
+                        ));
                       } else {
                         List<Topic> topics = snapshot.data.topics;
 
-                        return GridView(
-                          padding: const EdgeInsets.only(
-                              top: 0, left: 12, right: 12),
-                          physics: const BouncingScrollPhysics(),
-                          scrollDirection: Axis.vertical,
-                          children:
-                              List<Widget>.generate(topics.length, (index) {
-                            countFound = topics.length;
-                            final Animation<double> animation =
-                                Tween<double>(begin: 0.0, end: 1.0)
-                                    .animate(CurvedAnimation(
-                              parent: animationController,
-                              curve: Interval((1 / countFound) * index, 1.0,
-                                  curve: Curves.fastOutSlowIn),
-                            ));
-                            animationController.forward();
-                            return HomeListView(
-                              animation: animation,
-                              animationController: animationController,
-                              topic: topics[index],
-                              callback: () {
-                                Navigator.push(
-                                  context,
-                                  PageRouteBuilder(
-                                      pageBuilder:
-                                          (context, animation1, animation2) =>
-                                              FadeTransition(
-                                                  opacity: animation1,
-                                                  child: homeList[index]
-                                                      .navigateScreen)),
-                                );
-                              },
-                            );
-                          }),
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: multiple ? 2 : 1,
-                            mainAxisSpacing: 12.0,
-                            crossAxisSpacing: 12.0,
-                            childAspectRatio: 1.5,
+                        return SmartRefresher(
+                          enablePullDown: true,
+                          enablePullUp: true,
+                          controller: _refreshController,
+                          onRefresh: _onRefresh,
+                          onLoading: _onLoading,
+                          footer: CustomFooter(
+                            builder: (BuildContext context, LoadStatus mode) {
+                              Widget body;
+                              if (mode == LoadStatus.idle) {
+                                body = Text("Pull up load");
+                              } else if (mode == LoadStatus.loading) {
+                                body = CircularProgressIndicator();
+                              } else if (mode == LoadStatus.failed) {
+                                body = Text("Load Failed! Click retry!");
+                              } else if (mode == LoadStatus.canLoading) {
+                                body = Text("Release to load more");
+                              } else {
+                                body = Text("No more data");
+                              }
+                              return Container(
+                                height: 55.0,
+                                child: Center(child: body),
+                              );
+                            },
+                          ),
+                          child: GridView(
+                            padding: const EdgeInsets.only(
+                                top: 0, left: 12, right: 12),
+                            physics: const BouncingScrollPhysics(),
+                            scrollDirection: Axis.vertical,
+                            children:
+                                List<Widget>.generate(topics.length, (index) {
+                              countFound = topics.length;
+                              final Animation<double> animation =
+                                  Tween<double>(begin: 0.0, end: 1.0)
+                                      .animate(CurvedAnimation(
+                                parent: animationController,
+                                curve: Interval((1 / countFound) * index, 1.0,
+                                    curve: Curves.fastOutSlowIn),
+                              ));
+                              animationController.forward();
+                              return HomeListView(
+                                animation: animation,
+                                animationController: animationController,
+                                topic: topics[index],
+                                callback: () {
+                                  Navigator.push(
+                                    context,
+                                    PageRouteBuilder(
+                                        pageBuilder:
+                                            (context, animation1, animation2) =>
+                                                FadeTransition(
+                                                    opacity: animation1,
+                                                    child: TopicScreen(
+                                                      topic: topics[index],
+                                                    ))),
+                                  );
+                                },
+                              );
+                            }),
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: multiple ? 2 : 1,
+                              mainAxisSpacing: 12.0,
+                              crossAxisSpacing: 12.0,
+                              childAspectRatio: 1.5,
+                            ),
                           ),
                         );
                       }
@@ -265,6 +331,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               child: Padding(
                 padding: const EdgeInsets.only(left: 16, top: 4, bottom: 4),
                 child: TextField(
+                  controller: searchController,
                   onChanged: (String txt) {},
                   style: const TextStyle(fontSize: 18),
                   //cursorColor: Theme.of(context).primaryColor,
@@ -297,6 +364,18 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 borderRadius: const BorderRadius.all(Radius.circular(32.0)),
                 onTap: () {
                   FocusScope.of(context).requestFocus(FocusNode());
+                  return Navigator.push(
+                    context,
+                    PageRouteBuilder(
+                      pageBuilder: (context, animation1, animation2) =>
+                          FadeTransition(
+                        opacity: animation1,
+                        child: SearchScreen(
+                          keySearch: searchController.text,
+                        ),
+                      ),
+                    ),
+                  );
                 },
                 child: Padding(
                   padding: EdgeInsets.all(16),
@@ -367,64 +446,6 @@ class ItemButton extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class HomeListView extends StatelessWidget {
-  const HomeListView({
-    Key key,
-    this.topic,
-    this.callback,
-    this.animationController,
-    this.animation,
-  }) : super(key: key);
-
-  final Topic topic;
-  final VoidCallback callback;
-  final AnimationController animationController;
-  final Animation animation;
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: animationController,
-      builder: (context, child) {
-        return FadeTransition(
-          opacity: animation,
-          child: Transform(
-            transform: Matrix4.translationValues(
-                0.0, 50 * (1.0 - animation.value), 0.0),
-            child: AspectRatio(
-              aspectRatio: 1.5,
-              child: ClipRRect(
-                borderRadius: const BorderRadius.all(Radius.circular(4.0)),
-                child: Stack(
-                  alignment: AlignmentDirectional.center,
-                  children: [
-                    topic.image != null
-                        ? CachedNetworkImage(
-                            imageUrl: topic.image,
-                            fit: BoxFit.cover,
-                          )
-                        : Image.asset("assets/images/research-techniques.jpg"),
-                    Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        splashColor: Colors.grey.withOpacity(0.2),
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(4.0),
-                        ),
-                        onTap: callback,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        );
-      },
     );
   }
 }
