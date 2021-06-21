@@ -9,15 +9,19 @@ class HomeListView extends StatelessWidget {
     this.callback,
     this.animationController,
     this.animation,
+    this.isGridView,
   }) : super(key: key);
 
   final Topic topic;
   final VoidCallback callback;
   final AnimationController animationController;
   final Animation animation;
+  final bool isGridView;
 
   @override
   Widget build(BuildContext context) {
+    
+
     return AnimatedBuilder(
       animation: animationController,
       builder: (context, child) {
@@ -30,42 +34,141 @@ class HomeListView extends StatelessWidget {
               aspectRatio: 1.5,
               child: ClipRRect(
                 borderRadius: const BorderRadius.all(Radius.circular(4.0)),
-                child: Stack(
-                  alignment: AlignmentDirectional.center,
-                  children: [
-                    Material(
-                      color: Colors.transparent,
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: 20),
-                        child: GestureDetector(
-                          child: topic.image != null
-                              ? CachedNetworkImage(
-                                  imageUrl: topic.image,
-                                )
-                              : Image.asset(
-                                  "assets/images/research-techniques.jpg"),
-                          onTap: callback,
-                        ),
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: Text(
-                          "${topic.content}",
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                child: isGridView ? buildGridView(context) : buildListView(context),
               ),
             ),
           ),
         );
       },
+    );
+  }
+
+  GestureDetector buildGridView(BuildContext context) {
+    return GestureDetector(
+      onTap: callback,
+      child: Card(
+        child: Stack(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: topic.image != null
+                  ? CachedNetworkImage(
+                      imageUrl: topic.image,
+                    )
+                  : Image.asset("assets/images/research-techniques.jpg"),
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).backgroundColor.withOpacity(0.9),
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(10),
+                      bottomRight: Radius.circular(10)),
+                ),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  child: Text(
+                    "${topic.name}",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildListView(context) {
+    final size = MediaQuery.of(context).size;
+    return GestureDetector(
+      onTap: callback,
+      child: Card(
+        child: Stack(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Container(
+                        width: size.width*0.16,
+                        height: size.width*0.16,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: Colors.teal[300], width: 2),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: topic.image != null
+                              ? CachedNetworkImage(
+                                  imageUrl: topic.image,
+                                  fit: BoxFit.cover,
+                                )
+                              : Image.asset(
+                                  "assets/images/research-techniques.jpg"),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 40.0),
+                      child: Text(
+                        "ID: ${topic.topicCode}",
+                        style: TextStyle(color: Colors.lightBlueAccent),
+                      ),
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: Text(
+                    "${topic.name}",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: Text(
+                    "${topic.content}",
+                    style: TextStyle(fontWeight: FontWeight.w300, fontSize: 14),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Align(
+                alignment: Alignment.bottomRight,
+                child: Row(
+                  children: [
+                    Text(
+                      "Discovery More",
+                      style: TextStyle(color: Colors.redAccent),
+                    ),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Icon(Icons.double_arrow_outlined, color: Colors.redAccent),
+                  ],
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 }

@@ -27,7 +27,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
   TextEditingController searchController = TextEditingController();
-  bool multiple = true;
+  bool multiple = false;
 
   @override
   void initState() {
@@ -202,6 +202,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                               ));
                               animationController.forward();
                               return HomeListView(
+                                isGridView: multiple,
                                 animation: animation,
                                 animationController: animationController,
                                 topic: topics[index],

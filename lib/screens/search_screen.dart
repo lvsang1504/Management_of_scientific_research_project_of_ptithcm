@@ -187,6 +187,7 @@ class _SearchScreenState extends State<SearchScreen>
                           return Padding(
                             padding: const EdgeInsets.all(10.0),
                             child: HomeListView(
+                              isGridView: false,
                               animation: animation,
                               animationController: animationController,
                               topic: topics[index],
