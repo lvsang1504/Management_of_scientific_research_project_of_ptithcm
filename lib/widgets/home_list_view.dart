@@ -33,20 +33,30 @@ class HomeListView extends StatelessWidget {
                 child: Stack(
                   alignment: AlignmentDirectional.center,
                   children: [
-                    topic.image != null
-                        ? CachedNetworkImage(
-                            imageUrl: topic.image,
-                            fit: BoxFit.cover,
-                          )
-                        : Image.asset("assets/images/research-techniques.jpg"),
                     Material(
                       color: Colors.transparent,
-                      child: InkWell(
-                        splashColor: Colors.grey.withOpacity(0.2),
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(4.0),
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 20),
+                        child: GestureDetector(
+                          child: topic.image != null
+                              ? CachedNetworkImage(
+                                  imageUrl: topic.image,
+                                )
+                              : Image.asset(
+                                  "assets/images/research-techniques.jpg"),
+                          onTap: callback,
                         ),
-                        onTap: callback,
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Text(
+                          "${topic.content}",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                     ),
                   ],

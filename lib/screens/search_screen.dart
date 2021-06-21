@@ -4,7 +4,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/blocs/data_bloc/get_topics_bloc.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/models/topic.dart';
-import 'package:management_of_scientific_research_project_of_ptithcm/models/topic_reponse.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/models/topic_response.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/repositories/topic_repository.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/screens/topic_screen.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/widgets/home_list_view.dart';

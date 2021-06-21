@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/blocs/data_bloc/get_topics_bloc.dart';
-import 'package:management_of_scientific_research_project_of_ptithcm/models/topic_reponse.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/models/topic_response.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/widgets/drawer_widget.dart';
 
 class NotificationScreen extends StatefulWidget {

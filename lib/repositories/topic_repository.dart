@@ -1,4 +1,4 @@
-import 'package:management_of_scientific_research_project_of_ptithcm/models/topic_reponse.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/models/topic_response.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 

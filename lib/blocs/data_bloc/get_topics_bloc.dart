@@ -1,4 +1,4 @@
-import 'package:management_of_scientific_research_project_of_ptithcm/models/topic_reponse.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/models/topic_response.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/repositories/topic_repository.dart';
 import 'package:rxdart/rxdart.dart';
 
