@@ -1,8 +1,6 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:management_of_scientific_research_project_of_ptithcm/blocs/data_bloc/get_topics_bloc.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/models/topic.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/models/topic_response.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/repositories/topic_repository.dart';
@@ -119,10 +117,7 @@ class _SearchScreenState extends State<SearchScreen>
                             const BorderRadius.all(Radius.circular(32.0)),
                         onTap: () {
                           FocusScope.of(context).requestFocus(FocusNode());
-                          if (searchController.text == widget.keySearch) {
-                            topicsBloc.getSearchTopics(searchController.text);
-                            topics.clear();
-                          }
+                         
                           setState(() {});
                         },
                         child: Padding(
