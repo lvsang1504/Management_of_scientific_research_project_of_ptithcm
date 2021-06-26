@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/blocs/data_bloc/get_notification_bloc.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/controller/image_controller.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/models/notification.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/models/notification_response.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/repositories/notification_repository.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/widgets/drawer_widget.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/widgets/simple_drop_down_widget.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/widgets/time_ago.dart';
 
 class NotificationScreen extends StatefulWidget {
@@ -15,8 +17,6 @@ class NotificationScreen extends StatefulWidget {
 
 class _NotificationScreenState extends State<NotificationScreen>
     with TickerProviderStateMixin {
-  
-
   @override
   void initState() {
     super.initState();
@@ -36,6 +36,7 @@ class _NotificationScreenState extends State<NotificationScreen>
 
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Theme.of(context).backgroundColor,
         drawer: buildDrawer(context),
         appBar: AppBar(
           centerTitle: true,
@@ -73,20 +74,20 @@ class _NotificationScreenState extends State<NotificationScreen>
                 return ListView.builder(
                   itemCount: notifications.length,
                   itemBuilder: (context, int index) {
-                    Notifications item = notifications[index];
                     DateTime date =
                         DateTime.parse(notifications[index].timeCreated);
-                    return NotifyItem(
+                    // return NotifyItem(
+                    //   size: size,
+                    //   image: item.image,
+                    //   title: item.content,
+                    //   callback:(){},
+                    //   timeCreated: TimeAgo.timeAgoSinceDate(date),
+                    //   isRead: item.isRead,
+                    // );
+                    return buldNotifyItem(
                       size: size,
-                      image: item.image,
-                      title: item.content,
-                      callback: () async {
-                        await NotificationRepository().updateIsRead(true, item.id);
-                        notificationsBloc.getNotifications();
-                        setState(() {});
-                      },
-                      timeCreated: TimeAgo.timeAgoSinceDate(date),
-                      isRead: item.isRead,
+                      notifications: notifications[index],
+                      callback: () {},
                     );
                   },
                 );
@@ -95,37 +96,18 @@ class _NotificationScreenState extends State<NotificationScreen>
       ),
     );
   }
-}
 
-class NotifyItem extends StatelessWidget {
-  const NotifyItem({
-    Key key,
-    @required this.size,
-    this.title,
-    this.image,
-    this.callback,
-    this.isRead,
-    this.timeCreated,
-  }) : super(key: key);
-
-  final String title;
-  final String image;
-  final VoidCallback callback;
-  final bool isRead;
-  final String timeCreated;
-
-  final Size size;
-
-  @override
-  Widget build(BuildContext context) {
+  Widget buldNotifyItem(
+      {Size size, Notifications notifications, VoidCallback callback}) {
+    DateTime date = DateTime.parse(notifications.timeCreated);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       height: size.height * 0.15,
       child: GestureDetector(
         onTap: callback,
         child: Card(
-          elevation: isRead ? 0.0 : 2.0,
-          color: isRead
+          elevation: notifications.isRead ? 0.0 : 2.0,
+          color: notifications.isRead
               ? Theme.of(context).backgroundColor
               : Theme.of(context).cardColor,
           child: Row(
@@ -137,9 +119,9 @@ class NotifyItem extends StatelessWidget {
                 child: Stack(
                   children: [
                     CircleAvatar(
-                      backgroundImage: image == null
+                      backgroundImage: notifications.image == null
                           ? NetworkImage(imageUrlApp)
-                          : NetworkImage(image),
+                          : NetworkImage(notifications.image),
                       radius: 40,
                     ),
                     Positioned(
@@ -168,7 +150,7 @@ class NotifyItem extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        title,
+                        notifications.content,
                         style: TextStyle(fontSize: 15),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 3,
@@ -177,7 +159,7 @@ class NotifyItem extends StatelessWidget {
                         height: 5,
                       ),
                       Text(
-                        timeCreated,
+                        TimeAgo.timeAgoSinceDate(date),
                         style:
                             TextStyle(color: Colors.blueAccent, fontSize: 15),
                       ),
@@ -185,12 +167,86 @@ class NotifyItem extends StatelessWidget {
                   ),
                 ),
               ),
-              GestureDetector(
-                onTap: callback,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Icon(Icons.more_horiz),
-                ),
+              SimpleAccountMenu(
+                icons: [
+                  Icon(FontAwesomeIcons.envelopeOpen),
+                  Icon(Icons.delete),
+                ],
+                onChange: (index) async {
+                  if (index == 0) {
+                    bool check = await NotificationRepository()
+                        .updateIsRead(true, notifications.id);
+                    if (check) {
+                      ScaffoldMessenger.of(context)
+                        ..removeCurrentSnackBar()
+                        ..showSnackBar(
+                          SnackBar(
+                            content: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text('Mark is read'),
+                                Icon(Icons.mark_email_read, color: Colors.white,),
+                              ],
+                            ),
+                            backgroundColor: Colors.black38,
+                          ),
+                        );
+                    } else {
+                      ScaffoldMessenger.of(context)
+                        ..removeCurrentSnackBar()
+                        ..showSnackBar(
+                          SnackBar(
+                            content: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text('Something wrong. Try again!'),
+                                Icon(Icons.error, color: Colors.redAccent,),
+                              ],
+                            ),
+                            backgroundColor: Colors.black38,
+                          ),
+                        );
+                    }
+
+                    notificationsBloc.getNotifications();
+                  } else if (index == 1) {
+                    bool check = await NotificationRepository()
+                        .deleteNotification(true, notifications.id);
+                    if (check) {
+                      ScaffoldMessenger.of(context)
+                        ..removeCurrentSnackBar()
+                        ..showSnackBar(
+                          SnackBar(
+                            content: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text('Deleted'),
+                                Icon(Icons.delete_forever, color: Colors.white,),
+                              ],
+                            ),
+                            backgroundColor: Colors.black38,
+                          ),
+                        );
+                    } else {
+                      ScaffoldMessenger.of(context)
+                        ..removeCurrentSnackBar()
+                        ..showSnackBar(
+                          SnackBar(
+                            content: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text('Something wrong. Try again!'),
+                                Icon(Icons.error, color: Colors.redAccent,),
+                              ],
+                            ),
+                            backgroundColor: Colors.black38,
+                          ),
+                        );
+                    }
+                    notificationsBloc.getNotifications();
+                  }
+                  setState(() {});
+                },
               ),
             ],
           ),

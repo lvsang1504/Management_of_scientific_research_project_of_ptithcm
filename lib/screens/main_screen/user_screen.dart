@@ -59,6 +59,7 @@ class _UserScreenState extends State<UserScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
       drawer: buildDrawer(context),
       body: GestureDetector(
         onTap: () {

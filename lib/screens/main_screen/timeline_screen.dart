@@ -110,6 +110,7 @@ class _TimelinePageState extends State<TimelinePage>
     ];
 
     return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
       drawer: buildDrawer(context),
       appBar: AppBar(
         centerTitle: true,

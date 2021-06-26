@@ -8,7 +8,7 @@ class TopicRepository {
     try {
 
       final response =
-          await http.get(Uri.parse('https://10.0.2.2:5001/api/topics/'));
+          await http.get(Uri.parse('https://ptithcm.azurewebsites.net/api/topics'));
 
       if (response.statusCode == 200) {
         final jsonResponse = convert.jsonDecode(response.body);
@@ -25,7 +25,7 @@ class TopicRepository {
 
   Future<TopicResponse> getSearchTopics(String key) async {
     try {
-      String uri = 'https://10.0.2.2:5001/api/topics/search=$key';
+      String uri = 'https://ptithcm.azurewebsites.net/api/topics/search=$key';
 
       final response =
           await http.get(Uri.parse(uri));
