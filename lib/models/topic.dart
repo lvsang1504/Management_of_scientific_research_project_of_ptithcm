@@ -37,4 +37,6 @@ class Topic {
         dateCreated = json["dateCreated"],
         acceptanceTime = json["acceptanceTime"],
         note = json["note"];
+
+    
 }

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -6,6 +7,7 @@ import 'package:management_of_scientific_research_project_of_ptithcm/blocs/authe
 import 'package:management_of_scientific_research_project_of_ptithcm/blocs/register_bloc/register_bloc.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/blocs/register_bloc/register_event.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/blocs/register_bloc/register_state.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/screens/infonation_screen.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/widgets/gradient_button.dart';
 
 class RegisterForm extends StatefulWidget {
@@ -16,6 +18,8 @@ class RegisterForm extends StatefulWidget {
 class _LoginFormState extends State<RegisterForm> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   bool get isPopulated =>
       _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty;
@@ -33,7 +37,7 @@ class _LoginFormState extends State<RegisterForm> {
     _registerBloc = BlocProvider.of<RegisterBloc>(context);
     _emailController.addListener(_onEmailChange);
     _passwordController.addListener(_onPasswordChange);
-    _obscureText = false;
+    _obscureText = true;
   }
 
   @override
@@ -41,19 +45,19 @@ class _LoginFormState extends State<RegisterForm> {
     return Column(
       children: [
         Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Text(
-              'Register',
-              style: TextStyle(
-                fontSize: 40,
-                color: Colors.white,
-              ),
+          padding: const EdgeInsets.all(10.0),
+          child: Text(
+            'Register',
+            style: TextStyle(
+              fontSize: 40,
+              color: Colors.white,
             ),
           ),
+        ),
         BlocListener<RegisterBloc, RegisterState>(
           listener: (context, state) {
             if (state.isFailure) {
-              Scaffold.of(context)
+              ScaffoldMessenger.of(context)
                 ..removeCurrentSnackBar()
                 ..showSnackBar(
                   SnackBar(
@@ -70,7 +74,7 @@ class _LoginFormState extends State<RegisterForm> {
             }
 
             if (state.isSubmitting) {
-              Scaffold.of(context)
+              ScaffoldMessenger.of(context)
                 ..removeCurrentSnackBar()
                 ..showSnackBar(
                   SnackBar(
@@ -79,7 +83,8 @@ class _LoginFormState extends State<RegisterForm> {
                       children: <Widget>[
                         Text('Registering...'),
                         CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.white),
                         )
                       ],
                     ),
@@ -92,79 +97,86 @@ class _LoginFormState extends State<RegisterForm> {
               BlocProvider.of<AuthenticationBloc>(context).add(
                 AuthenticationLoggedIn(),
               );
-              Navigator.pop(context);
+              popAllAndPush(context, InfomationScreen());
             }
           },
           child: BlocBuilder<RegisterBloc, RegisterState>(
             builder: (context, state) {
               return Padding(
-                padding: const EdgeInsets.all(20.0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
                 child: Form(
-                  child: Column(
-                    children: <Widget>[
-                      TextFormField(
-                        controller: _emailController,
-                        decoration: InputDecoration(
-                          icon: Icon(Icons.email),
-                          labelText: "Email",
+                  key: _formKey,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: <Widget>[
+                        TextFormField(
+                          controller: _emailController,
+                          decoration: InputDecoration(
+                            icon: Icon(Icons.email),
+                            labelText: "Email",
+                          ),
+                          keyboardType: TextInputType.emailAddress,
+                          autovalidate: true,
+                          autocorrect: false,
+                          validator: (_) {
+                            return !state.isEmailValid ? 'Invalid Email' : null;
+                          },
                         ),
-                        keyboardType: TextInputType.emailAddress,
-                        autovalidate: true,
-                        autocorrect: false,
-                        validator: (_) {
-                          return !state.isEmailValid ? 'Invalid Email' : null;
-                        },
-                      ),
-                      TextFormField(
-                        controller: _passwordController,
-                        decoration: InputDecoration(
-                          icon: Icon(FontAwesomeIcons.key),
-                          labelText: "Password",
-                          suffixIcon: IconButton(
-                              icon: _obscureText
-                                  ? Icon(Icons.visibility)
-                                  : Icon(Icons.visibility_off),
-                              onPressed: () {
-                                setState(
-                                  () {
-                                    _obscureText = !_obscureText;
-                                  },
-                                );
-                              }),
+                        TextFormField(
+                          controller: _passwordController,
+                          decoration: InputDecoration(
+                            icon: Icon(FontAwesomeIcons.key),
+                            labelText: "Password",
+                            suffixIcon: IconButton(
+                                icon: _obscureText
+                                    ? Icon(Icons.visibility)
+                                    : Icon(Icons.visibility_off),
+                                onPressed: () {
+                                  setState(
+                                    () {
+                                      _obscureText = !_obscureText;
+                                    },
+                                  );
+                                }),
+                          ),
+                          obscureText: _obscureText,
+                          autovalidate: true,
+                          autocorrect: false,
+                          validator: (_) {
+                            return !state.isPasswordValid
+                                ? 'Password has at least 6 characters!'
+                                : null;
+                          },
                         ),
-                        obscureText: _obscureText,
-                        autovalidate: true,
-                        autocorrect: false,
-                        validator: (_) {
-                          return !state.isPasswordValid ? 'Password has at least 6 characters!' : null;
-                        },
-                      ),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      GradientButton(
-                        width: 150,
-                        height: 45,
-                        onPressed: () {
-                          if (isButtonEnabled(state)) {
-                            _onFormSubmitted();
-                          }
-                        },
-                        text: Text(
-                          'Register',
-                          style: TextStyle(
+                        SizedBox(
+                          height: 30,
+                        ),
+                        GradientButton(
+                          width: 150,
+                          height: 45,
+                          onPressed: () async {
+                            if (isButtonEnabled(state)) {
+                              FocusScope.of(context).requestFocus(FocusNode());
+                              _onFormSubmitted();
+                            }
+                          },
+                          text: Text(
+                            'Register',
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                          icon: Icon(
+                            Icons.check,
                             color: Colors.white,
                           ),
                         ),
-                        icon: Icon(
-                          Icons.check,
-                          color: Colors.white,
+                        SizedBox(
+                          height: 10,
                         ),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               );
@@ -187,5 +199,11 @@ class _LoginFormState extends State<RegisterForm> {
   void _onFormSubmitted() {
     _registerBloc.add(RegisterSubmitted(
         email: _emailController.text, password: _passwordController.text));
+  }
+
+  Future popAllAndPush(BuildContext context, Widget widget) async {
+    await Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (BuildContext context) => widget),
+        ModalRoute.withName('/'));
   }
 }

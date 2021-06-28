@@ -8,6 +8,7 @@ import 'package:management_of_scientific_research_project_of_ptithcm/bloc/theme/
 import 'package:management_of_scientific_research_project_of_ptithcm/bloc/theme/setting_cubit.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/blocs/authentication_bloc/authentication_bloc.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/blocs/authentication_bloc/authentication_event.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/controller/image_controller.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/repositories/user_repository.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/screens/setting_screen/font_size_setting_screen.dart';
 
@@ -71,8 +72,9 @@ Widget buildDrawer(BuildContext context) {
                                           ),
                                         )
                                       : CachedNetworkImage(
-                                          imageUrl: FirebaseAuth
-                                              .instance.currentUser.photoURL,
+                                          imageUrl: FirebaseAuth.instance
+                                                  .currentUser.photoURL ??
+                                              imageUrlLogo,
                                           fit: BoxFit.cover,
                                           placeholder: (context, url) =>
                                               CircularProgressIndicator(

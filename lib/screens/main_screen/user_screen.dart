@@ -1,13 +1,18 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/blocs/data_bloc/get_user_bloc.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/controller/image_controller.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/models/user_api.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/repositories/user_repository.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/widgets/drawer_widget.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/widgets/image_pick_and_crop/image_picker_handler.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/widgets/widget_circular_animation.dart';
+import 'package:rounded_loading_button/rounded_loading_button.dart';
 
 class UserScreen extends StatefulWidget {
   @override
@@ -19,12 +24,14 @@ class _UserScreenState extends State<UserScreen>
   String imageUrl;
   AnimationController _controller;
   ImagePickerHandler imagePicker;
-  UserRepository userRepository;
+  UserRepository userRepository = UserRepository();
 
-  TextEditingController _nameController;
-  TextEditingController _birthdayController;
-  TextEditingController _idCardController;
-  TextEditingController _phoneNumberController;
+  TextEditingController _nameController = TextEditingController(
+      text: FirebaseAuth.instance.currentUser.displayName ?? "");
+  TextEditingController _phoneController = TextEditingController();
+  TextEditingController _idStudentController = TextEditingController();
+  TextEditingController _classController = TextEditingController();
+  final _btnSaveController = RoundedLoadingButtonController();
 
   @override
   void initState() {
@@ -35,118 +42,311 @@ class _UserScreenState extends State<UserScreen>
 
     imagePicker = ImagePickerHandler(this, _controller);
     imagePicker.init();
-    userRepository = UserRepository();
 
-    _nameController = TextEditingController(
-        text: FirebaseAuth.instance.currentUser.displayName);
-    _birthdayController = TextEditingController(text: "15/04/2000");
-    _idCardController = TextEditingController(text: "301733248");
-    _phoneNumberController = TextEditingController(text: "0816397011");
+    usersBloc.getUsers(FirebaseAuth.instance.currentUser.uid ?? "");
     super.initState();
   }
 
   @override
   void dispose() {
     _controller.dispose();
-
     _nameController.dispose();
-    _birthdayController.dispose();
-    _idCardController.dispose();
-    _phoneNumberController.dispose();
+    _phoneController.dispose();
+    _idStudentController.dispose();
+    _classController.dispose();
     super.dispose();
+  }
+
+  bool isValidInfo() {
+    if (checkInfo(_nameController.text, "Name is required.") &&
+        checkInfo(_idStudentController.text, "ID Student is required.") &&
+        checkInfo(_classController.text, "Class name is required.") &&
+        checkInfo(_phoneController.text, "Phone number is required.")) {
+      return true;
+    }
+    return false;
+  }
+
+  bool checkInfo(String key, String notify) {
+    if (key.trim().isEmpty) {
+      ScaffoldMessenger.of(context)
+        ..removeCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            content: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text('$notify'),
+                Icon(Icons.error_rounded, color: Colors.redAccent)
+              ],
+            ),
+            backgroundColor: Colors.black12,
+          ),
+        );
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  void _onSaveInfo() async {
+    FocusScope.of(context).requestFocus(FocusNode());
+    if (isValidInfo()) {
+      final userApi = UserApi(
+        email: FirebaseAuth.instance.currentUser.email,
+        name: _nameController.text.trim().toUpperCase(),
+        classRoom: _classController.text.trim().toUpperCase(),
+        idStudent: _idStudentController.text.trim().toUpperCase(),
+        phone: _phoneController.text.trim(),
+        keyFirebase: FirebaseAuth.instance.currentUser.uid,
+      );
+      if (await UserRepository()
+          .updateUser(userApi, userApi.keyFirebase.trim())) {
+        ScaffoldMessenger.of(context)
+          ..removeCurrentSnackBar()
+          ..showSnackBar(
+            SnackBar(
+              content: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text('Saved.'),
+                  Icon(
+                    Icons.check,
+                    color: Colors.greenAccent,
+                  )
+                ],
+              ),
+              backgroundColor: Color(0xffffae88),
+            ),
+          );
+        _btnSaveController.success();
+        setState(() {
+          usersBloc.getUsers(FirebaseAuth.instance.currentUser.uid ?? "");
+        });
+      } else {
+        ScaffoldMessenger.of(context)
+          ..removeCurrentSnackBar()
+          ..showSnackBar(
+            SnackBar(
+              content: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text('Error! Try again.'),
+                  Icon(
+                    Icons.error,
+                    color: Colors.redAccent,
+                  )
+                ],
+              ),
+              backgroundColor: Color(0xffffae88),
+            ),
+          );
+        _btnSaveController.reset();
+      }
+    } else {
+      ScaffoldMessenger.of(context)
+        ..removeCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            content: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text('Error! Try again.'),
+                Icon(
+                  Icons.error,
+                  color: Colors.redAccent,
+                )
+              ],
+            ),
+            backgroundColor: Color(0xffffae88),
+          ),
+        );
+      _btnSaveController.reset();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(top: 20, bottom: 50),
+        child: SizedBox(
+          height: 50,
+          width: 100,
+          child: RoundedLoadingButton(
+            width: 100,
+            color: Colors.cyan,
+            successColor: Colors.greenAccent,
+            child: Text('Save', style: TextStyle(color: Colors.white)),
+            controller: _btnSaveController,
+            onPressed: _onSaveInfo,
+          ),
+        ),
+      ),
       backgroundColor: Theme.of(context).backgroundColor,
       drawer: buildDrawer(context),
-      body: GestureDetector(
-        onTap: () {
-          FocusScope.of(context).requestFocus(FocusNode());
-        },
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              headerScreen(context),
-              Form(
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      TextFormField(
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          labelText: 'Name',
-                          suffixIcon: GestureDetector(
-                            onTap: () {},
-                            child: Icon(Icons.edit_outlined),
-                          ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            headerScreen(context),
+            StreamBuilder<UserApi>(
+                stream: usersBloc.subject.stream,
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Center(
+                        child: Column(
+                          children: [
+                            SpinKitCircle(
+                              color: Colors.cyan,
+                              size: 50.0,
+                              controller: AnimationController(
+                                  vsync: this,
+                                  duration: const Duration(milliseconds: 1200)),
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Text("Laoding..."),
+                          ],
                         ),
-                        controller: _nameController,
                       ),
-                      TextFormField(
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          labelText: 'Class',
-                          suffixIcon: GestureDetector(
-                            onTap: () {},
-                            child: Icon(Icons.edit_outlined),
-                          ),
+                    );
+                  } else {
+                    UserApi user = snapshot.data;
+                    _nameController.text = user.name;
+                    _idStudentController.text = user.idStudent;
+                    _classController.text = user.classRoom;
+                    _phoneController.text = user.phone;
+                    return Form(
+                      child: Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextFormField(
+                                onChanged: (_) => _btnSaveController.reset(),
+                                controller: _nameController,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20)),
+                                  icon: Icon(Icons.perm_identity),
+                                  labelText: "Name",
+                                ),
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
+                                validator: (valid) {
+                                  return valid.trim().isEmpty
+                                      ? "Name cannot be blank!"
+                                      : null;
+                                },
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextFormField(
+                                onChanged: (_) => _btnSaveController.reset(),
+                                controller: _idStudentController,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20)),
+                                  icon: Icon(Icons.code_rounded),
+                                  labelText: "ID Student",
+                                ),
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
+                                validator: (valid) {
+                                  return valid.trim().isEmpty
+                                      ? "Id Student cannot be blank!"
+                                      : null;
+                                },
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextFormField(
+                                onChanged: (_) => _btnSaveController.reset(),
+                                controller: _classController,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20)),
+                                  icon: Icon(Icons.grade),
+                                  labelText: "Class",
+                                ),
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
+                                validator: (valid) {
+                                  return valid.trim().isEmpty
+                                      ? "Class cannot be blank!"
+                                      : null;
+                                },
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextFormField(
+                                  onChanged: (_) => _btnSaveController.reset(),
+                                  controller: _phoneController,
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(20)),
+                                    icon: Icon(Icons.phone),
+                                    labelText: "Phone Number",
+                                  ),
+                                  keyboardType: TextInputType.phone,
+                                  autovalidateMode:
+                                      AutovalidateMode.onUserInteraction,
+                                  validator: (valid) {
+                                    return valid.trim().isEmpty
+                                        ? "Phone number cannot be blank!"
+                                        : null;
+                                  }),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextFormField(
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20)),
+                                  icon: Icon(Icons.email),
+                                  labelText: "Email",
+                                ),
+                                keyboardType: TextInputType.emailAddress,
+                                autovalidate: true,
+                                autocorrect: false,
+                                enabled: false,
+                                initialValue:
+                                    FirebaseAuth.instance.currentUser.email ??
+                                        "null",
+                              ),
+                            ),
+                          ],
                         ),
-                        controller: _phoneNumberController,
-                        // style: TextStyle(fontSize: 18),
                       ),
-                      TextFormField(
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          labelText: 'Birthday',
-                          suffixIcon: GestureDetector(
-                            onTap: () {},
-                            child: Icon(Icons.edit_outlined),
-                          ),
-                        ),
-                        controller: _birthdayController,
-                      ),
-                      TextFormField(
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          labelText: 'Identity Card',
-                          suffixIcon: GestureDetector(
-                            onTap: () {},
-                            child: Icon(Icons.edit_outlined),
-                          ),
-                        ),
-                        controller: _idCardController,
-                        // style: TextStyle(fontSize: 18),
-                      ),
-                      TextFormField(
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          labelText: 'Phone Number',
-                          suffixIcon: GestureDetector(
-                            onTap: () {},
-                            child: Icon(Icons.edit_outlined),
-                          ),
-                        ),
-                        controller: _phoneNumberController,
-                        // style: TextStyle(fontSize: 18),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
+                    );
+                  }
+                }),
+            SizedBox(
+              height: 100,
+            ),
+          ],
         ),
       ),
     );
   }
 
+  Future<UserApi> getData(String firebaseKey) async {
+    var userApi = await UserRepository().getUserApi(firebaseKey);
+    return userApi;
+  }
+
   Stack headerScreen(BuildContext context) {
-    UserRepository userRepository = UserRepository();
+    //UserRepository userRepository = UserRepository();
     getAvatar() async {
       return await userRepository
           .getPhoto('user/${FirebaseAuth.instance.currentUser.uid}');
@@ -216,7 +416,9 @@ class _UserScreenState extends State<UserScreen>
                                       child: CachedNetworkImage(
                                         imageUrl: imageUrlLogo,
                                         placeholder: (context, url) =>
-                                            CircularProgressIndicator(backgroundColor: Colors.blueGrey,),
+                                            CircularProgressIndicator(
+                                          backgroundColor: Colors.blueGrey,
+                                        ),
                                       ),
                                     )
                                   : CircleAvatar(
@@ -224,7 +426,9 @@ class _UserScreenState extends State<UserScreen>
                                       child: CachedNetworkImage(
                                         imageUrl: snapshot.data,
                                         placeholder: (context, url) =>
-                                            CircularProgressIndicator(backgroundColor: Colors.blueGrey,),
+                                            CircularProgressIndicator(
+                                          backgroundColor: Colors.blueGrey,
+                                        ),
                                       ),
                                     ),
                             );
@@ -251,9 +455,21 @@ class _UserScreenState extends State<UserScreen>
                 ),
               ),
             ),
-            Text(
-              FirebaseAuth.instance.currentUser.displayName ?? "User",
-              style: TextStyle(fontSize: 22, color: Colors.white),
+            FutureBuilder<UserApi>(
+                future: getData(FirebaseAuth.instance.currentUser.uid),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return SizedBox();
+                  } else {
+                    var user = snapshot.data;
+                    return Text(
+                      user.name ?? "User",
+                      style: TextStyle(fontSize: 22, color: Colors.white),
+                    );
+                  }
+                }),
+            SizedBox(
+              height: 5,
             ),
             Text(
               FirebaseAuth.instance.currentUser.email ?? "",

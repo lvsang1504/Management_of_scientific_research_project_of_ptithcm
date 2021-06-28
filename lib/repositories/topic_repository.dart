@@ -39,7 +39,7 @@ class TopicRepository {
       }
     } catch (error, stacktrace) {
       print("Exception occured: $error stackTrace: $stacktrace");
-      return TopicResponse.withError("$error");
+       return TopicResponse.withError("$error");
     }
   }
 }

@@ -1,8 +1,12 @@
 import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:http/http.dart' as http;
+import 'package:management_of_scientific_research_project_of_ptithcm/models/user_api.dart';
+import 'dart:convert' as convert;
+
+import 'package:management_of_scientific_research_project_of_ptithcm/models/user_response.dart';
 
 class UserRepository {
   final FirebaseAuth _firebaseAuth;
@@ -77,5 +81,67 @@ class UserRepository {
       print("Error: $e");
     }
     return null;
+  }
+
+  ///////////////////// Call API to SQL Server ////////////////////////
+  ///
+  ///
+  Future<UserApi> getUserApi(String firebaseKey) async {
+    try {
+      final response = await http.get(Uri.parse(
+          'https://ptithcm.azurewebsites.net/api/users/firebaseKey=$firebaseKey'));
+
+      if (response.statusCode == 200) {
+        final jsonResponse = convert.jsonDecode(response.body);
+        return UserApi.fromJson(jsonResponse);
+      } else {
+        throw Exception('Failed to load post');
+      }
+    } catch (error, stacktrace) {
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return null;
+    }
+  }
+
+  Future<bool> createUser(UserApi userApi) async {
+    try {
+      final response = await http.post(
+        Uri.parse('https://ptithcm.azurewebsites.net/api/users/'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: convert.jsonEncode(userApi.toJson()),
+      );
+
+      if (response.statusCode == 201) {
+        return true;
+      } else {
+        throw Exception('Failed to load post');
+      }
+    } catch (error, stacktrace) {
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return false;
+    }
+  }
+
+  Future<bool> updateUser(UserApi userApi, String keyFirebase) async {
+    try {
+      final response = await http.put(
+        Uri.parse('https://ptithcm.azurewebsites.net/api/users/update=$keyFirebase'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: convert.jsonEncode(userApi.toJson()),
+      );
+
+      if (response.statusCode == 204) {
+        return true;
+      } else {
+        throw Exception('Failed to load post');
+      }
+    } catch (error, stacktrace) {
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return false;
+    }
   }
 }
