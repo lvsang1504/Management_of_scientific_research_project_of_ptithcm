@@ -9,6 +9,7 @@ import 'package:management_of_scientific_research_project_of_ptithcm/bloc/theme/
 import 'package:management_of_scientific_research_project_of_ptithcm/blocs/authentication_bloc/authentication_bloc.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/blocs/authentication_bloc/authentication_event.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/controller/image_controller.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/models/user_api.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/repositories/user_repository.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/screens/setting_screen/font_size_setting_screen.dart';
 
@@ -17,6 +18,11 @@ Widget buildDrawer(BuildContext context) {
   getAvatar() async {
     return await userRepository
         .getPhoto('user/${FirebaseAuth.instance.currentUser.uid}');
+  }
+  Future<UserApi> getData() async {
+    var user =
+        await UserRepository().getUserApi(FirebaseAuth.instance.currentUser.uid);
+    return user;
   }
 
   return Theme(
@@ -86,15 +92,28 @@ Widget buildDrawer(BuildContext context) {
                             }),
                       ),
                       SizedBox(
-                        height: 5.0,
+                        height: 8.0,
                       ),
-                      Text(
-                        "${FirebaseAuth.instance.currentUser.displayName ?? "User"}",
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Theme.of(context).appBarTheme.color,
-                        ),
-                      ),
+                      FutureBuilder<UserApi>(
+                          future: getData(),
+                          builder: (context, snapshot) {
+                            if (!snapshot.hasData) {
+                              return Text(
+                                "${FirebaseAuth.instance.currentUser.displayName ?? "User"}",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Theme.of(context).appBarTheme.color,
+                                ),
+                              );
+                            } else 
+                            return Text(
+                              "${snapshot.data.name ?? "User"}",
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Theme.of(context).appBarTheme.color,
+                              ),
+                            );
+                          }),
                     ],
                   ),
                 ),
@@ -145,7 +164,7 @@ Widget buildDrawer(BuildContext context) {
                     child: ListTile(
                       title: Row(
                         children: [
-                          Icon(Icons.nights_stay_rounded),
+                           Icon(Icons.nights_stay_rounded),
                           Text('Dark mode'),
                           SizedBox(
                             width: 12,

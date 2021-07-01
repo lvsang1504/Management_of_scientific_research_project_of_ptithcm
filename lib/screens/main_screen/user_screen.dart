@@ -99,6 +99,7 @@ class _UserScreenState extends State<UserScreen>
         idStudent: _idStudentController.text.trim().toUpperCase(),
         phone: _phoneController.text.trim(),
         keyFirebase: FirebaseAuth.instance.currentUser.uid,
+        role: 1,
       );
       if (await UserRepository()
           .updateUser(userApi, userApi.keyFirebase.trim())) {
@@ -168,18 +169,22 @@ class _UserScreenState extends State<UserScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(top: 20, bottom: 50),
-        child: SizedBox(
-          height: 50,
-          width: 100,
-          child: RoundedLoadingButton(
-            width: 100,
-            color: Colors.cyan,
-            successColor: Colors.greenAccent,
-            child: Text('Save', style: TextStyle(color: Colors.white)),
-            controller: _btnSaveController,
-            onPressed: _onSaveInfo,
+      floatingActionButton: Align(
+        alignment: Alignment.bottomLeft,
+        child: Padding(
+          padding: const EdgeInsets.only(left: 20, bottom: 50),
+          child: SizedBox(
+            height: 50,
+            width: 70,
+            child: RoundedLoadingButton(
+              //width: 70,
+              height: 40,
+              color: Colors.blue,
+              successColor: Colors.greenAccent,
+              child: Text('Save', style: TextStyle(color: Colors.white)),
+              controller: _btnSaveController,
+              onPressed: _onSaveInfo,
+            ),
           ),
         ),
       ),
@@ -209,7 +214,7 @@ class _UserScreenState extends State<UserScreen>
                             SizedBox(
                               height: 5,
                             ),
-                            Text("Laoding..."),
+                            Text("Loading..."),
                           ],
                         ),
                       ),

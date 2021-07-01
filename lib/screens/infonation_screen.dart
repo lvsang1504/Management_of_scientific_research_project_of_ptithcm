@@ -66,6 +66,7 @@ class _InfomationScreenState extends State<InfomationScreen>
   void _onSaveInfo() async {
     if (isValidInfo()) {
       final userApi = UserApi(
+        role: 1,
         email: FirebaseAuth.instance.currentUser.email,
         name: _nameController.text.trim().toUpperCase(),
         classRoom: _classController.text.trim().toUpperCase(),

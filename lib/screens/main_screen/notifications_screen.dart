@@ -74,8 +74,8 @@ class _NotificationScreenState extends State<NotificationScreen>
                 return ListView.builder(
                   itemCount: notifications.length,
                   itemBuilder: (context, int index) {
-                    DateTime date =
-                        DateTime.parse(notifications[index].timeCreated);
+                    // DateTime date =
+                    //     DateTime.parse(notifications[index].timeCreated);
                     // return NotifyItem(
                     //   size: size,
                     //   image: item.image,
@@ -169,13 +169,15 @@ class _NotificationScreenState extends State<NotificationScreen>
               ),
               SimpleAccountMenu(
                 icons: [
-                  Icon(FontAwesomeIcons.envelopeOpen),
+                  notifications.isRead
+                      ? Icon(FontAwesomeIcons.envelopeOpen)
+                      : Icon(Icons.mark_as_unread),
                   Icon(Icons.delete),
                 ],
                 onChange: (index) async {
                   if (index == 0) {
                     bool check = await NotificationRepository()
-                        .updateIsRead(true, notifications.id);
+                        .updateIsRead(!notifications.isRead, notifications.id);
                     if (check) {
                       ScaffoldMessenger.of(context)
                         ..removeCurrentSnackBar()
@@ -184,8 +186,19 @@ class _NotificationScreenState extends State<NotificationScreen>
                             content: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
-                                Text('Mark is read'),
-                                Icon(Icons.mark_email_read, color: Colors.white,),
+                                !notifications.isRead
+                                    ? Text(
+                                        'Mark is read',
+                                        style: TextStyle(color: Colors.white),
+                                      )
+                                    : Text(
+                                        'Mark is unread',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                Icon(
+                                  Icons.mark_email_read,
+                                  color: Colors.white,
+                                ),
                               ],
                             ),
                             backgroundColor: Colors.black38,
@@ -200,7 +213,10 @@ class _NotificationScreenState extends State<NotificationScreen>
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
                                 Text('Something wrong. Try again!'),
-                                Icon(Icons.error, color: Colors.redAccent,),
+                                Icon(
+                                  Icons.error,
+                                  color: Colors.redAccent,
+                                ),
                               ],
                             ),
                             backgroundColor: Colors.black38,
@@ -221,7 +237,10 @@ class _NotificationScreenState extends State<NotificationScreen>
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
                                 Text('Deleted'),
-                                Icon(Icons.delete_forever, color: Colors.white,),
+                                Icon(
+                                  Icons.delete_forever,
+                                  color: Colors.white,
+                                ),
                               ],
                             ),
                             backgroundColor: Colors.black38,
@@ -236,7 +255,10 @@ class _NotificationScreenState extends State<NotificationScreen>
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
                                 Text('Something wrong. Try again!'),
-                                Icon(Icons.error, color: Colors.redAccent,),
+                                Icon(
+                                  Icons.error,
+                                  color: Colors.redAccent,
+                                ),
                               ],
                             ),
                             backgroundColor: Colors.black38,

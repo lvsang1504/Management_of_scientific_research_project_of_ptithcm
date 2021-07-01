@@ -1,6 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/bloc/theme/app_theme_cubit.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/bloc/theme/setting_cubit.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/models/topic.dart';
 
 class TopicScreen extends StatelessWidget {
@@ -64,9 +67,27 @@ class TopicScreen extends StatelessWidget {
                     elevation: 0.0,
                     backgroundColor: Colors.grey.withOpacity(0.5),
                     actions: [
-                      IconButton(
-                        icon: Icon(Icons.info_outline),
-                        onPressed: () {},
+                      BlocProvider(
+                        create: (context) => SettingSwitchCubit(
+                            context.read<AppThemeCubit>().isDark),
+                        child: BlocBuilder<SettingSwitchCubit, bool>(
+                          builder: (context, state) {
+                            return IconButton(
+                              icon: state
+                                  ? Icon(Icons.brightness_5_outlined)
+                                  : Icon(Icons.brightness_3),
+                              onPressed: () {
+                                state = !state;
+                                context
+                                    .read<SettingSwitchCubit>()
+                                    .onChangeDarkMode(state);
+                                context
+                                    .read<AppThemeCubit>()
+                                    .updateTheme(state);
+                              },
+                            );
+                          },
+                        ),
                       )
                     ],
                   ),

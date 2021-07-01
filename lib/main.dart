@@ -14,17 +14,18 @@ import 'blocs/authentication_bloc/authentication_bloc.dart';
 import 'blocs/authentication_bloc/authentication_event.dart';
 import 'blocs/authentication_bloc/authentication_state.dart';
 
-class MyHttpOverrides extends HttpOverrides {
-  @override
-  HttpClient createHttpClient(SecurityContext context) {
-    return super.createHttpClient(context)
-      ..badCertificateCallback =
-          (X509Certificate cert, String host, int port) => true;
-  }
-}
+// Dùng để chạy localhost
+// class MyHttpOverrides extends HttpOverrides {
+//   @override
+//   HttpClient createHttpClient(SecurityContext context) {
+//     return super.createHttpClient(context)
+//       ..badCertificateCallback =
+//           (X509Certificate cert, String host, int port) => true;
+//   }
+// }
 
 void main() async {
-  HttpOverrides.global = new MyHttpOverrides();
+  //HttpOverrides.global = new MyHttpOverrides();
 
   //WidgetsFlutterBinding.ensureInitialized();
   Bloc.observer = SimpleBlocObserver();
