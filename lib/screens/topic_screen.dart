@@ -2,8 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:management_of_scientific_research_project_of_ptithcm/bloc/theme/app_theme_cubit.dart';
-import 'package:management_of_scientific_research_project_of_ptithcm/bloc/theme/setting_cubit.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/blocs/theme/app_theme_cubit.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/blocs/theme/setting_cubit.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/controller/translations.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/models/topic.dart';
 
 class TopicScreen extends StatelessWidget {
@@ -32,7 +33,7 @@ class TopicScreen extends StatelessWidget {
               color: Colors.amber.withOpacity(0.8),
             ),
             child: Text(
-              "Join now",
+              "${translations.translate("screen.topic.btnJoin")}",
               style: TextStyle(fontSize: 18),
             ),
           ),
@@ -105,7 +106,7 @@ class TopicScreen extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      "ID: ${topic.topicCode}",
+                      "${translations.translate("screen.topic.id")}: ${topic.topicCode}",
                       style: TextStyle(
                         fontSize: 12,
                       ),
@@ -133,7 +134,8 @@ class TopicScreen extends StatelessWidget {
                           color: Colors.cyan,
                         ),
                         borderRadius: BorderRadius.circular(15)),
-                    child: Text("Type: ${topic.type}"),
+                    child: Text(
+                        "${translations.translate("screen.topic.type")}: ${topic.type}"),
                   ),
                 ),
                 Padding(
@@ -146,7 +148,8 @@ class TopicScreen extends StatelessWidget {
                           color: Colors.cyan,
                         ),
                         borderRadius: BorderRadius.circular(15)),
-                    child: Text("Field: ${topic.field}"),
+                    child: Text(
+                        "${translations.translate("screen.topic.field")}: ${topic.field}"),
                   ),
                 ),
               ],
@@ -165,7 +168,7 @@ class TopicScreen extends StatelessWidget {
                   Column(
                     children: [
                       Text(
-                        "Day Created",
+                        "${translations.translate("screen.topic.dayCreate")}",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                         ),
@@ -184,7 +187,7 @@ class TopicScreen extends StatelessWidget {
                   Column(
                     children: [
                       Text(
-                        "End Date",
+                        "${translations.translate("screen.topic.endDate")}",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                         ),
@@ -203,7 +206,7 @@ class TopicScreen extends StatelessWidget {
                   Column(
                     children: [
                       Text(
-                        "Budget",
+                        "${translations.translate("screen.topic.budget")}",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                         ),
@@ -224,7 +227,7 @@ class TopicScreen extends StatelessWidget {
               padding: const EdgeInsets.all(10.0),
               child: Container(
                 child: Text(
-                  "Nội dung: ${topic.content}",
+                  "${translations.translate("screen.topic.content")}: ${topic.content}",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w300),
                 ),
               ),

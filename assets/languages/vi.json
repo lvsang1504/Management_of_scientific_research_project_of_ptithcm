@@ -1,0 +1,78 @@
+{
+  "lang.vi": "vi",
+  "lang.en": "en",
+  "lang.name.vi": "Tiếng Việt",
+  "lang.name.en": "Tiếng Anh",
+
+  "loading": "Đang tải...",
+  "discovery": "Khám phá ngay!",
+  "save": "Lưu",
+
+  "screen.home": "Trang chủ",
+  "screen.process": "Quá trình",
+  "screen.user": "Người dùng",
+  "screen.notify": "Thông báo",
+
+  "screen.home.topicsFound": "chủ đề tìm thấy",
+  "screen.home.hintText": "Tìm kiếm đề tài...",
+
+  "screen.home.left": "Căn trái",
+  "screen.home.center": "Căn giữa",
+  "screen.home.right": "Căn phải",
+
+  "screen.user.name": "Tên",
+  "screen.user.idStudent": "Mã sinh viên",
+  "screen.user.class": "Lớp",
+  "screen.user.phone": "Số điện thoại",
+  "screen.user.email": "Email",
+
+  "screen.notify.isread": "Đánh dấu đã đọc",
+  "screen.notify.isunread": "Đánh dấu chưa đọc",
+  "screen.notify.isdelete": "Đã xóa",
+  "screen.notify.error": "Lỗi. Thử lại!",
+
+
+  "screen.topic.btnJoin": "Tham gia",
+  "screen.topic.id": "Mã",
+  "screen.topic.type": "Loại",
+  "screen.topic.field": "Lĩnh vực",
+  "screen.topic.dayCreate": "Ngày tạo",
+  "screen.topic.endDate": "Ngày kết thúc",
+  "screen.topic.budget": "Ngân sách",
+  "screen.topic.content": "Nội dung",
+
+  "time.1weekago": "1 tuần trước",
+  "time.lastweek": "tuần trước",
+  "time.1dayago": "1 ngày trước",
+  "time.dayago": "ngày trước",
+  "time.yesterday": "ngày hôm qua",
+  "time.hoursago": "giờ trước",
+  "time.1hourago": "1 giờ trước",
+  "time.1minuteago": "1 phút trước",
+  "time.minuteago": "phút trước",
+  "time.secondsago": "vài giây trước",
+  "time.justnow": "vừa xong",
+
+  "setting.font": "Nét chữ",
+  "setting.language": "Ngôn ngữ",
+  "setting.language.selectlanguage": "Chọn ngôn ngữ",
+  "setting.darkMode": "Chế độ tối",
+  "setting.logout": "Đăng xuất",
+
+  "funtion.name.register" : "Đăng ký đề tài",
+  "funtion.name.approve" : "Phê duyệt chủ đề",
+  "funtion.name.lookupInfo" : "Tìm kiếm thông tin",
+  "funtion.name.statistical" : "Thống kê",
+  "funtion.name.member" : "Thành viên",
+  "funtion.name.report" : "Báo cáo",
+  "funtion.name.account" : "Quản lý tài khoản",
+
+  "account.username": "Tên người dùng",
+  "account.email": "Email",
+  "account.password": "Mật khẩu",
+
+  "object_test": {
+    "test1": "1",
+    "test2": "2"
+  }
+}

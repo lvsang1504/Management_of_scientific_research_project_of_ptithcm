@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/blocs/data_bloc/get_topics_bloc.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/controller/translations.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/models/topic.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/models/topic_response.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/screens/search_screen.dart';
@@ -61,7 +62,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: buildAppBar(context),
-      drawer: buildDrawer(context),
+      drawer: DrawerWidget(),
       body: Stack(
         children: [
           InkWell(
@@ -96,7 +97,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                           floating: true,
                           delegate: ContestTabHeader(
                             getFilterBarUI(
-                              title: "${countFound ?? ""} topics found",
+                            title: "${countFound ?? ""} ${translations.translate("screen.home.topicsFound")}",
                             ),
                           ),
                         ),
@@ -150,7 +151,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                             children: [
                               spinkit,
                               Spacer(),
-                              Text("Loading..."),
+                              Text("${translations.translate("loading")}"),
                             ],
                           ),
                         ));
@@ -337,7 +338,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   //cursorColor: Theme.of(context).primaryColor,
                   decoration: InputDecoration(
                     border: InputBorder.none,
-                    hintText: 'Typing...',
+                    hintText: "${translations.translate("screen.home.hintText")}",
                   ),
                 ),
               ),
@@ -397,7 +398,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     return AppBar(
       centerTitle: true,
       title: Text(
-        "Home",
+        translations.translate("screen.home"),
         style: TextStyle(color: Theme.of(context).accentColor),
       ),
       iconTheme: IconThemeData(

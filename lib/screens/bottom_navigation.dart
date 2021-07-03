@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/controller/translations.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/screens/main_screen/home_screen.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/screens/main_screen/user_screen.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/screens/main_screen/notifications_screen.dart';

@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/controller/translations.dart';
 
 import '../bottom_navigation.dart';
 
@@ -62,7 +63,7 @@ class _BottomBarViewState extends State<BottomBarView>
                           children: <Widget>[
                             Expanded(
                               child: TabIcons(
-                                  title: "Home",
+                                  title: translations.translate("screen.home"),
                                   tabIconData: widget.tabIconsList[0],
                                   removeAllSelect: () {
                                     setRemoveAllSelection(
@@ -72,7 +73,7 @@ class _BottomBarViewState extends State<BottomBarView>
                             ),
                             Expanded(
                               child: TabIcons(
-                                  title: "Timeline",
+                                  title: translations.translate("screen.process"),
                                   tabIconData: widget.tabIconsList[1],
                                   removeAllSelect: () {
                                     setRemoveAllSelection(
@@ -90,7 +91,7 @@ class _BottomBarViewState extends State<BottomBarView>
                             ),
                             Expanded(
                               child: TabIcons(
-                                  title: "User",
+                                  title: translations.translate("screen.user"),
                                   tabIconData: widget.tabIconsList[2],
                                   removeAllSelect: () {
                                     setRemoveAllSelection(
@@ -100,7 +101,7 @@ class _BottomBarViewState extends State<BottomBarView>
                             ),
                             Expanded(
                               child: TabIcons(
-                                  title: "Notification",
+                                  title: translations.translate("screen.notify"),
                                   tabIconData: widget.tabIconsList[3],
                                   removeAllSelect: () {
                                     setRemoveAllSelection(

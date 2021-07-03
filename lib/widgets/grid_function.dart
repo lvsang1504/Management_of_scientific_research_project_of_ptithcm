@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/controller/translations.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/widgets/scroll_text.dart';
 
 class GridFunction extends StatefulWidget {
@@ -36,20 +37,20 @@ class _GridFunctionState extends State<GridFunction> {
                 children: [
                   ItemButton(
                     icon: Icons.app_registration,
-                    title: "Topic Registration",
+                    title: "${translations.translate("funtion.name.register")}",
                   ),
                   ItemButton(
                     icon: Icons.approval,
-                    title: "Approve The Topic",
+                    title: "${translations.translate("funtion.name.approve")}",
                     onTap: () {},
                   ),
                   ItemButton(
                     icon: Icons.search_sharp,
-                    title: "Information Lookup",
+                    title: "${translations.translate("funtion.name.lookupInfo")}",
                   ),
                   ItemButton(
                     icon: Icons.bar_chart_rounded,
-                    title: "Statistical",
+                    title: "${translations.translate("funtion.name.statistical")}",
                     onTap: () {},
                   ),
                 ],
@@ -59,21 +60,21 @@ class _GridFunctionState extends State<GridFunction> {
                 children: [
                   ItemButton(
                     icon: Icons.group_work_outlined,
-                    title: "Member",
+                    title: "${translations.translate("funtion.name.member")}",
                     onTap: () {},
                   ),
                   ItemButton(
                     icon: Icons.recent_actors_outlined,
-                    title: "Report",
+                    title: "${translations.translate("funtion.name.report")}",
                   ),
                   ItemButton(
                     icon: Icons.account_box_rounded,
-                    title: "Account Manager",
+                    title: "${translations.translate("funtion.name.account")}",
                     onTap: () {},
                   ),
                   ItemButton(
                     icon: Icons.recent_actors_outlined,
-                    title: "Report",
+                    title: "${translations.translate("funtion.name.account")}",
                   ),
                 ],
               ),

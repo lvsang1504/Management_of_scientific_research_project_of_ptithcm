@@ -7,7 +7,7 @@ class PeriodicReportRepository {
   Future<PeriodicReportResponse> getPeriodicReports(String key) async {
     try {
       final response =
-          await http.get(Uri.parse('https://ptithcm.azurewebsites.net/api/periodic-report/idStudent=N18DCCN123'));
+          await http.get(Uri.parse('https://ptithcm.azurewebsites.net/api/periodic-report/idStudent=N18DCCN172'));
 
       if (response.statusCode == 200) {
         final jsonResponse = convert.jsonDecode(response.body);

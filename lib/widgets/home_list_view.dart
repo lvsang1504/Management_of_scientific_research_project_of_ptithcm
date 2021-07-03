@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/controller/translations.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/models/topic.dart';
 
 class HomeListView extends StatelessWidget {
@@ -119,7 +120,7 @@ class HomeListView extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(top: 40.0),
                       child: Text(
-                        "ID: ${topic.topicCode}",
+                        "${translations.translate("screen.topic.id")}: ${topic.topicCode}",
                         style: TextStyle(color: Colors.lightBlueAccent),
                       ),
                     ),
@@ -155,7 +156,7 @@ class HomeListView extends StatelessWidget {
                 child: Row(
                   children: [
                     Text(
-                      "Discovery More",
+                      "${translations.translate("discovery")}",
                       style: TextStyle(color: Colors.redAccent),
                     ),
                     SizedBox(

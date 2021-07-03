@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:management_of_scientific_research_project_of_ptithcm/controller/text_controller.dart';
 
 class FontSizeSettingScreen extends StatelessWidget {
   @override

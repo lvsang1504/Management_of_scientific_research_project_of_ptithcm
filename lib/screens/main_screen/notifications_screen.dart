@@ -3,6 +3,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/blocs/data_bloc/get_notification_bloc.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/controller/image_controller.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/controller/translations.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/models/notification.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/models/notification_response.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/repositories/notification_repository.dart';
@@ -37,11 +38,11 @@ class _NotificationScreenState extends State<NotificationScreen>
     return SafeArea(
       child: Scaffold(
         backgroundColor: Theme.of(context).backgroundColor,
-        drawer: buildDrawer(context),
+        drawer: DrawerWidget(),
         appBar: AppBar(
           centerTitle: true,
           title: Text(
-            "Notifications",
+            translations.translate("screen.notify"),
             style: TextStyle(
               color: Theme.of(context).accentColor,
               fontWeight: FontWeight.bold,
@@ -188,11 +189,11 @@ class _NotificationScreenState extends State<NotificationScreen>
                               children: <Widget>[
                                 !notifications.isRead
                                     ? Text(
-                                        'Mark is read',
+                                        "${translations.translate("screen.notify.isread")}",
                                         style: TextStyle(color: Colors.white),
                                       )
                                     : Text(
-                                        'Mark is unread',
+                                        "${translations.translate("screen.notify.isunread")}",
                                         style: TextStyle(color: Colors.white),
                                       ),
                                 Icon(
@@ -212,7 +213,7 @@ class _NotificationScreenState extends State<NotificationScreen>
                             content: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
-                                Text('Something wrong. Try again!'),
+                                Text("${translations.translate("screen.notify.error")}"),
                                 Icon(
                                   Icons.error,
                                   color: Colors.redAccent,
@@ -236,7 +237,7 @@ class _NotificationScreenState extends State<NotificationScreen>
                             content: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
-                                Text('Deleted'),
+                                Text("${translations.translate("screen.notify.isdelete")}"),
                                 Icon(
                                   Icons.delete_forever,
                                   color: Colors.white,

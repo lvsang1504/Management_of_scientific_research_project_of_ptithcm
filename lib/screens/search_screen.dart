@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/controller/translations.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/models/topic.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/models/topic_response.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/repositories/topic_repository.dart';
@@ -88,7 +89,7 @@ class _SearchScreenState extends State<SearchScreen>
                           //cursorColor: Theme.of(context).primaryColor,
                           decoration: InputDecoration(
                             border: InputBorder.none,
-                            hintText: 'Typing...',
+                            hintText: "${translations.translate("screen.home.hintText")}",
                           ),
                         ),
                       ),

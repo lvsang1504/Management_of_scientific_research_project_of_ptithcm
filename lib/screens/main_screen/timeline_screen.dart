@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/controller/translations.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/models/periodic_report_response.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/repositories/periodic_report_repository.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/widgets/drawer_widget.dart';
@@ -109,11 +110,11 @@ class _TimelinePageState extends State<TimelinePage>
 
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
-      drawer: buildDrawer(context),
+      drawer: DrawerWidget(),
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          "Timeline",
+          '${translations.translate("screen.process")}',
           style: TextStyle(
             color: Theme.of(context).accentColor,
             fontWeight: FontWeight.bold,
@@ -151,13 +152,13 @@ class _TimelinePageState extends State<TimelinePage>
               controller: _tabController,
               tabs: [
                 Tab(
-                  text: "Left",
+                  text: "${translations.translate("screen.home.left")}",
                 ),
                 Tab(
-                  text: "Center",
+                  text: "${translations.translate("screen.home.center")}",
                 ),
                 Tab(
-                  text: "Right",
+                  text: "${translations.translate("screen.home.right")}",
                 ),
               ],
             ),

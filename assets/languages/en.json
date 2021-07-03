@@ -1,0 +1,77 @@
+{
+  "lang.vi": "vi",
+  "lang.en": "en",
+  "lang.name.vi": "Vietnamese",
+  "lang.name.en": "English",
+
+  "loading": "Loading...",
+  "discovery": "Discovery now!",
+  "save": "Save",
+
+  "screen.home": "Home",
+  "screen.process": "Process",
+  "screen.user": "User",
+  "screen.notify": "Notification",
+
+  "screen.home.topicsFound": "topics found",
+  "screen.home.hintText": "Search topic...",
+
+  "screen.home.left": "Left",
+  "screen.home.center": "center",
+  "screen.home.right": "Right",
+
+  "screen.user.name": "Name",
+  "screen.user.idStudent": "ID Student",
+  "screen.user.class": "Class",
+  "screen.user.phone": "Phone Number",
+  "screen.user.email": "Email",
+
+  "screen.notify.isread": "Mark is read",
+  "screen.notify.isunread": "Mark is unread",
+  "screen.notify.isdelete": "Deleted",
+  "screen.notify.error": "Something wrong. Try again!",
+
+  "screen.topic.btnJoin": "Join now",
+  "screen.topic.id": "ID",
+  "screen.topic.type": "Type",
+  "screen.topic.field": "Field",
+  "screen.topic.dayCreate": "Day Created",
+  "screen.topic.endDate": "End date",
+  "screen.topic.budget": "Budget",
+  "screen.topic.content": "Content",
+
+  "time.1weekago": "1 week ago",
+  "time.lastweek": "week ago",
+  "time.1dayago": "1 day ago",
+  "time.dayago": "day ago",
+  "time.yesterday": "yesterday",
+  "time.hoursago": "hours ago",
+  "time.1hourago": "1 hour ago",
+  "time.1minuteago": "1 minute ago",
+  "time.minuteago": "minute ago",
+  "time.secondsago": "seconds ago",
+  "time.justnow": "Just now",
+
+  "setting.font": "Font",
+  "setting.language": "Language",
+  "setting.language.selectlanguage": "Select language",
+  "setting.darkMode": "Dark mode",
+  "setting.logout": "Log out",
+
+  "funtion.name.register" : "Topic Registration",
+  "funtion.name.approve" : "Approve The Topic",
+  "funtion.name.lookupInfo" : "Infomation Lookup",
+  "funtion.name.statistical" : "Statistical",
+  "funtion.name.member" : "Member",
+  "funtion.name.report" : "Report",
+  "funtion.name.account" : "Account Manager",
+
+  "account.username": "Username",
+  "account.email": "Email",
+  "account.password": "Password",
+
+  "object_test": {
+    "test1": "1",
+    "test2": "2"
+  }
+}

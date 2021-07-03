@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/blocs/data_bloc/get_user_bloc.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/controller/image_controller.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/controller/translations.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/models/user_api.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/repositories/user_repository.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/widgets/drawer_widget.dart';
@@ -181,7 +182,7 @@ class _UserScreenState extends State<UserScreen>
               height: 40,
               color: Colors.blue,
               successColor: Colors.greenAccent,
-              child: Text('Save', style: TextStyle(color: Colors.white)),
+              child: Text("${translations.translate("save")}", style: TextStyle(color: Colors.white)),
               controller: _btnSaveController,
               onPressed: _onSaveInfo,
             ),
@@ -189,7 +190,7 @@ class _UserScreenState extends State<UserScreen>
         ),
       ),
       backgroundColor: Theme.of(context).backgroundColor,
-      drawer: buildDrawer(context),
+      drawer: DrawerWidget(),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -214,7 +215,7 @@ class _UserScreenState extends State<UserScreen>
                             SizedBox(
                               height: 5,
                             ),
-                            Text("Loading..."),
+                            Text("${translations.translate("loading")}"),
                           ],
                         ),
                       ),
@@ -240,7 +241,7 @@ class _UserScreenState extends State<UserScreen>
                                   border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(20)),
                                   icon: Icon(Icons.perm_identity),
-                                  labelText: "Name",
+                                  labelText: "${translations.translate("screen.user.name")}",
                                 ),
                                 autovalidateMode:
                                     AutovalidateMode.onUserInteraction,
@@ -260,7 +261,7 @@ class _UserScreenState extends State<UserScreen>
                                   border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(20)),
                                   icon: Icon(Icons.code_rounded),
-                                  labelText: "ID Student",
+                                  labelText: "${translations.translate("screen.user.idStudent")}",
                                 ),
                                 autovalidateMode:
                                     AutovalidateMode.onUserInteraction,
@@ -280,7 +281,7 @@ class _UserScreenState extends State<UserScreen>
                                   border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(20)),
                                   icon: Icon(Icons.grade),
-                                  labelText: "Class",
+                                  labelText: "${translations.translate("screen.user.class")}",
                                 ),
                                 autovalidateMode:
                                     AutovalidateMode.onUserInteraction,
@@ -301,7 +302,7 @@ class _UserScreenState extends State<UserScreen>
                                         borderRadius:
                                             BorderRadius.circular(20)),
                                     icon: Icon(Icons.phone),
-                                    labelText: "Phone Number",
+                                    labelText: "${translations.translate("screen.user.phone")}",
                                   ),
                                   keyboardType: TextInputType.phone,
                                   autovalidateMode:
@@ -319,7 +320,7 @@ class _UserScreenState extends State<UserScreen>
                                   border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(20)),
                                   icon: Icon(Icons.email),
-                                  labelText: "Email",
+                                  labelText: "${translations.translate("screen.user.email")}",
                                 ),
                                 keyboardType: TextInputType.emailAddress,
                                 autovalidate: true,
@@ -468,7 +469,7 @@ class _UserScreenState extends State<UserScreen>
                   } else {
                     var user = snapshot.data;
                     return Text(
-                      user.name ?? "User",
+                      user.name ?? "${translations.translate("account.username")}",
                       style: TextStyle(fontSize: 22, color: Colors.white),
                     );
                   }
