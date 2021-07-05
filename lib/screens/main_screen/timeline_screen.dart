@@ -1,12 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/animation/animation_route.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/controller/translations.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/models/periodic_report_response.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/repositories/periodic_report_repository.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/widgets/drawer_widget.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/widgets/timeline_model.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/widgets/timline.dart';
+
+import '../add_process_item.dart';
 
 class TimelinePage extends StatefulWidget {
   TimelinePage({Key key, this.title}) : super(key: key);
@@ -60,7 +63,7 @@ class _TimelinePageState extends State<TimelinePage>
                 children: [
                   spinkit,
                   Spacer(),
-                  Text("Loading..."),
+                  Text('${translations.translate("loading")}'),
                 ],
               ),
             ));
@@ -79,7 +82,7 @@ class _TimelinePageState extends State<TimelinePage>
                 children: [
                   spinkit,
                   Spacer(),
-                  Text("Loading..."),
+                  Text('${translations.translate("loading")}'),
                 ],
               ),
             ));
@@ -98,7 +101,7 @@ class _TimelinePageState extends State<TimelinePage>
                 children: [
                   spinkit,
                   Spacer(),
-                  Text("Loading..."),
+                  Text('${translations.translate("loading")}'),
                 ],
               ),
             ));
@@ -130,7 +133,8 @@ class _TimelinePageState extends State<TimelinePage>
             padding: const EdgeInsets.all(8.0),
             child: GestureDetector(
               child: Icon(Icons.add),
-              onTap: () {},
+              onTap: () => Navigator.push(context,
+                            AnimatingRoute(router: AddProcessItem())),
             ),
           ),
         ],
@@ -152,13 +156,13 @@ class _TimelinePageState extends State<TimelinePage>
               controller: _tabController,
               tabs: [
                 Tab(
-                  text: "${translations.translate("screen.home.left")}",
+                  text: "${translations.translate("screen.process.left")}",
                 ),
                 Tab(
-                  text: "${translations.translate("screen.home.center")}",
+                  text: "${translations.translate("screen.process.center")}",
                 ),
                 Tab(
-                  text: "${translations.translate("screen.home.right")}",
+                  text: "${translations.translate("screen.process.right")}",
                 ),
               ],
             ),

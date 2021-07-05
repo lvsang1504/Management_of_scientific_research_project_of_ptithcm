@@ -161,7 +161,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                           Text('${translations.translate("setting.language")}'),
                           Spacer(),
                           Container(
-                            height: 32,
+                            height: 26,
                             child: translations.currentLanguage == "en"
                                 ? Image.asset(
                                     "assets/images/united-kingdom.png",
@@ -177,7 +177,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(right: 100),
+                    padding: const EdgeInsets.only(right: 80),
                     child: BlocProvider(
                       create: (context) => SettingSwitchCubit(
                           context.read<AppThemeCubit>().isDark),
@@ -187,9 +187,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                             Icon(Icons.nights_stay_rounded),
                             Text(
                                 '${translations.translate("setting.darkMode")}'),
-                            SizedBox(
-                              width: 12,
-                            ),
+                            Spacer(),
                             BlocBuilder<SettingSwitchCubit, bool>(
                               builder: (context, state) {
                                 return Switch(

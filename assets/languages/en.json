@@ -4,6 +4,7 @@
   "lang.name.vi": "Vietnamese",
   "lang.name.en": "English",
 
+  "wellcome": "Welcome",
   "loading": "Loading...",
   "discovery": "Discovery now!",
   "save": "Save",
@@ -16,9 +17,10 @@
   "screen.home.topicsFound": "topics found",
   "screen.home.hintText": "Search topic...",
 
-  "screen.home.left": "Left",
-  "screen.home.center": "center",
-  "screen.home.right": "Right",
+  "screen.process.left": "Left",
+  "screen.process.center": "Center",
+  "screen.process.right": "Right",
+  "screen.process.additem": "Add Process",
 
   "screen.user.name": "Name",
   "screen.user.idStudent": "ID Student",
@@ -40,6 +42,8 @@
   "screen.topic.budget": "Budget",
   "screen.topic.content": "Content",
 
+  "time.hour": "Hour",
+  "time.date": "Date",
   "time.1weekago": "1 week ago",
   "time.lastweek": "week ago",
   "time.1dayago": "1 day ago",

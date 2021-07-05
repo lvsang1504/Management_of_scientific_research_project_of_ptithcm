@@ -255,7 +255,7 @@ class _NotificationScreenState extends State<NotificationScreen>
                             content: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
-                                Text('Something wrong. Try again!'),
+                                Text("${translations.translate("screen.notify.error")}"),
                                 Icon(
                                   Icons.error,
                                   color: Colors.redAccent,

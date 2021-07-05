@@ -1,9 +1,11 @@
 {
+
   "lang.vi": "vi",
   "lang.en": "en",
   "lang.name.vi": "Tiếng Việt",
   "lang.name.en": "Tiếng Anh",
 
+  "wellcome": "Xin chào",
   "loading": "Đang tải...",
   "discovery": "Khám phá ngay!",
   "save": "Lưu",
@@ -16,9 +18,10 @@
   "screen.home.topicsFound": "chủ đề tìm thấy",
   "screen.home.hintText": "Tìm kiếm đề tài...",
 
-  "screen.home.left": "Căn trái",
-  "screen.home.center": "Căn giữa",
-  "screen.home.right": "Căn phải",
+  "screen.process.left": "Căn trái",
+  "screen.process.center": "Căn giữa",
+  "screen.process.right": "Căn phải",
+  "screen.process.additem": "Thêm quá trình",
 
   "screen.user.name": "Tên",
   "screen.user.idStudent": "Mã sinh viên",
@@ -41,6 +44,8 @@
   "screen.topic.budget": "Ngân sách",
   "screen.topic.content": "Nội dung",
 
+  "time.hour": "Giờ",
+  "time.date": "Ngày",
   "time.1weekago": "1 tuần trước",
   "time.lastweek": "tuần trước",
   "time.1dayago": "1 ngày trước",

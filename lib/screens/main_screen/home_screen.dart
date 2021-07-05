@@ -287,13 +287,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                     color: Theme.of(context).accentColor,
                                   ),
                           ),
-                          SizedBox(width: 8),
-                          GestureDetector(
-                              onTap: () {},
-                              child: Icon(
-                                Icons.filter_list_outlined,
-                                color: Theme.of(context).accentColor,
-                              )),
+                          // SizedBox(width: 8),
+                          // GestureDetector(
+                          //     onTap: () {},
+                          //     child: Icon(
+                          //       Icons.filter_list_outlined,
+                          //       color: Theme.of(context).accentColor,
+                          //     )),
                         ],
                       ),
                     ),

@@ -115,6 +115,8 @@ class _LoginFormState extends State<RegisterForm> {
                           decoration: InputDecoration(
                             icon: Icon(Icons.email),
                             labelText: "Email",
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20)),
                           ),
                           keyboardType: TextInputType.emailAddress,
                           autovalidate: true,
@@ -123,11 +125,14 @@ class _LoginFormState extends State<RegisterForm> {
                             return !state.isEmailValid ? 'Invalid Email' : null;
                           },
                         ),
+                        SizedBox(height: 20,),
                         TextFormField(
                           controller: _passwordController,
                           decoration: InputDecoration(
                             icon: Icon(FontAwesomeIcons.key),
                             labelText: "Password",
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20)),
                             suffixIcon: IconButton(
                                 icon: _obscureText
                                     ? Icon(Icons.visibility)

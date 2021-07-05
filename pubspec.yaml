@@ -51,6 +51,10 @@ dependencies:
   # language
   flutter_localizations:
     sdk: flutter
+  date_time_picker: "^2.0.0"
+
+  #splash
+  animated_splash: ^1.0.0
 
 dev_dependencies:
   flutter_test:
