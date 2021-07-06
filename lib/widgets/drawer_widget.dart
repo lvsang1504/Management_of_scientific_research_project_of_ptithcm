@@ -238,10 +238,6 @@ class _DrawerWidgetState extends State<DrawerWidget> {
   }
 }
 
-// Widget Drawer(BuildContext context) {
-
-//   return ;
-// }
 
 // Class which draws the custom shape
 class DrawerPainter extends CustomPainter {

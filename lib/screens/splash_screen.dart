@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/blocs/authentication_bloc/authentication_bloc.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/blocs/authentication_bloc/authentication_state.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/controller/translations.dart';
@@ -10,13 +12,22 @@ import 'package:management_of_scientific_research_project_of_ptithcm/repositorie
 import 'bottom_navigation.dart';
 import 'login/login_screen.dart';
 
-class SplashScreen extends StatelessWidget {
+class SplashScreen extends StatefulWidget {
   final UserRepository userRepository;
 
   const SplashScreen({Key key, this.userRepository}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen>
+    with TickerProviderStateMixin {
+  @override
+  void initState() {
+    // Funtion delay không được để trong hàm build()
+    //vì because this is causing a cyclic behaviour,
+    //every time you call setState() the build() is called again,
     Timer(
         Duration(seconds: 3),
         () => Navigator.of(context).pushReplacement(MaterialPageRoute(
@@ -25,7 +36,7 @@ class SplashScreen extends StatelessWidget {
                   builder: (context, state) {
                     if (state is AuthenticationFailure) {
                       return LoginScreen(
-                        userRepository: userRepository,
+                        userRepository: widget.userRepository,
                       );
                     }
                     if (state is AuthenticationSuccess) {
@@ -38,58 +49,79 @@ class SplashScreen extends StatelessWidget {
                     );
                   },
                 ))));
+    super.initState();
+  }
 
-    var assetsImage = AssetImage("assets/logo/logo.png");
-    var image = Image(image: assetsImage, height: 300);
-    GlobalKey _scaffoldKey = GlobalKey();
+  @override
+  Widget build(BuildContext context) {
+    final String assetImage = 'assets/svg/wellcom.svg';
+
+    final spinkit = SpinKitCircle(
+      color: Colors.cyan,
+      size: 50.0,
+      controller: AnimationController(
+          vsync: this, duration: const Duration(milliseconds: 1200)),
+    );
     return MaterialApp(
         home: Scaffold(
-            key: _scaffoldKey,
-            backgroundColor: Colors.cyanAccent,
-            body: Center(
-              child: Padding(
-                padding: const EdgeInsets.all(50.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      height: 150,
-                      child: image,
-                    ),
-                    Text(
-                      "PTIT Scientific Research",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18.0,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 100,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: SizedBox(
-                        height: 50,
-                        child: CircularProgressIndicator(),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Text(
-                        '${translations.translate("wellcome")}',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18.0,
-                        ),
-                      ),
-                    ),
-                  ],
+            body: Container(
+      height: double.infinity,
+      decoration: BoxDecoration(
+          gradient: LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [Colors.cyanAccent, Colors.white],
+      )),
+      child: Padding(
+        padding: const EdgeInsets.all(50.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              height: 250,
+              child: SvgPicture.asset(assetImage),
+            ),
+            Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  height: 80,
+                  child: Image.asset("assets/logo/logo.png"),
+                ),
+                Text(
+                  "PTIT Scientific Research",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18.0,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 100,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: SizedBox(
+                height: 50,
+                child: spinkit,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Text(
+                '${translations.translate("wellcome")}',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18.0,
                 ),
               ),
-            )
+            ),
+          ],
+        ),
+      ),
+    )
             // body: Stack(
             //   fit: StackFit.expand,
             //   children: <Widget>[

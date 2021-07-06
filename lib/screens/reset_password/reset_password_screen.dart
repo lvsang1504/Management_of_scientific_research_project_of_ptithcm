@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/blocs/login_bloc/login_bloc.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/repositories/user_repository.dart';
 
@@ -38,7 +39,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
               gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Colors.amber, Colors.white],
+            colors: [Colors.cyanAccent, Colors.white],
           )),
           child: SingleChildScrollView(
             child: Stack(
@@ -46,8 +47,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 Padding(
                   padding: const EdgeInsets.only(top: 50),
                   child: Center(
-                      child: Image.asset(
-                    "assets/logo/logo.png",
+                      child: SvgPicture.asset(
+                    "assets/svg/reset_pass.svg",
                     height: 150,
                   )),
                 ),

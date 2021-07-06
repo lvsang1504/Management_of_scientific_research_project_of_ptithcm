@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/blocs/register_bloc/register_bloc.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/repositories/user_repository.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/screens/register/register_form.dart';
@@ -30,7 +31,7 @@ class RegisterScreen extends StatelessWidget {
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              colors: [Colors.amber, Colors.white],
+              colors: [Colors.cyanAccent, Colors.white],
             ),
           ),
           child: SingleChildScrollView(
@@ -38,7 +39,7 @@ class RegisterScreen extends StatelessWidget {
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.only(top: 50),
-                  child: Center(child: Image.asset("assets/logo/logo.png", height: 150,)),
+                  child: Center(child: SvgPicture.asset("assets/svg/register.svg", height: 150,)),
                 ),
                 Container(
                   margin: const EdgeInsets.only(top: 230),
