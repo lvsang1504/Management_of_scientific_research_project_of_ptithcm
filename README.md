@@ -1,6 +1,5 @@
 # management_of_scientific_research_project_of_ptithcm
-
-A new Flutter project.
+Ứng dụng di động được phát triển để hổ trợ cho quá trình quản lý, nghiên cứu khoa học của giáo viên, sinh viên Học Viện Công Nghệ Bưu Chính Viễn Thông (PTIT)
 
 ## Getting Started
 
