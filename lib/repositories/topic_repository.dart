@@ -6,7 +6,7 @@ class TopicRepository {
   
   Future<TopicResponse> getTopics() async {
     try {
-
+      //https://ptithcm.azurewebsites.net/api/topics
       final response =
           await http.get(Uri.parse('https://ptithcm.azurewebsites.net/api/topics'));
 

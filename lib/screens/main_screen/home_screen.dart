@@ -9,7 +9,7 @@ import 'package:management_of_scientific_research_project_of_ptithcm/screens/sea
 import 'package:management_of_scientific_research_project_of_ptithcm/screens/topic_screen.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/widgets/drawer_widget.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/widgets/grid_function.dart';
-import 'package:management_of_scientific_research_project_of_ptithcm/widgets/home_list_view.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/widgets/topic_list_view.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 int countFound;
@@ -200,7 +200,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                     curve: Curves.fastOutSlowIn),
                               ));
                               animationController.forward();
-                              return HomeListView(
+                              return TopicListView(
                                 isGridView: multiple,
                                 animation: animation,
                                 animationController: animationController,

@@ -6,7 +6,7 @@ import 'package:management_of_scientific_research_project_of_ptithcm/models/topi
 import 'package:management_of_scientific_research_project_of_ptithcm/models/topic_response.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/repositories/topic_repository.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/screens/topic_screen.dart';
-import 'package:management_of_scientific_research_project_of_ptithcm/widgets/home_list_view.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/widgets/topic_list_view.dart';
 
 class SearchScreen extends StatefulWidget {
   final String keySearch;
@@ -182,7 +182,7 @@ class _SearchScreenState extends State<SearchScreen>
                           animationController.forward();
                           return Padding(
                             padding: const EdgeInsets.all(10.0),
-                            child: HomeListView(
+                            child: TopicListView(
                               isGridView: false,
                               animation: animation,
                               animationController: animationController,

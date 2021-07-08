@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/controller/translations.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/models/topic.dart';
 
-class HomeListView extends StatelessWidget {
-  const HomeListView({
+class TopicListView extends StatelessWidget {
+  const TopicListView({
     Key key,
     this.topic,
     this.callback,
@@ -21,8 +21,6 @@ class HomeListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
-
     return AnimatedBuilder(
       animation: animationController,
       builder: (context, child) {
@@ -35,7 +33,9 @@ class HomeListView extends StatelessWidget {
               aspectRatio: 1.5,
               child: ClipRRect(
                 borderRadius: const BorderRadius.all(Radius.circular(4.0)),
-                child: isGridView ? buildGridView(context) : buildListView(context),
+                child: isGridView
+                    ? buildGridView(context)
+                    : buildListView(context),
               ),
             ),
           ),
@@ -89,6 +89,8 @@ class HomeListView extends StatelessWidget {
     return GestureDetector(
       onTap: callback,
       child: Card(
+        elevation: 5,
+        color: Theme.of(context).cardColor,
         child: Stack(
           children: [
             Column(
@@ -99,11 +101,12 @@ class HomeListView extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.all(15.0),
                       child: Container(
-                        width: size.width*0.16,
-                        height: size.width*0.16,
+                        width: size.width * 0.16,
+                        height: size.width * 0.16,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: Colors.teal[300], width: 2),
+                          border:
+                              Border.all(color: Colors.teal[300], width: 2),
                         ),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(10),
@@ -130,7 +133,8 @@ class HomeListView extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: Text(
                     "${topic.name}",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -142,7 +146,8 @@ class HomeListView extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: Text(
                     "${topic.content}",
-                    style: TextStyle(fontWeight: FontWeight.w300, fontSize: 14),
+                    style:
+                        TextStyle(fontWeight: FontWeight.w300, fontSize: 14),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -162,7 +167,8 @@ class HomeListView extends StatelessWidget {
                     SizedBox(
                       width: 5,
                     ),
-                    Icon(Icons.double_arrow_outlined, color: Colors.redAccent),
+                    Icon(Icons.double_arrow_outlined,
+                        color: Colors.redAccent),
                   ],
                 ),
               ),
