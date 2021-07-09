@@ -85,7 +85,7 @@ class ImagePickerDialog extends StatelessWidget {
                   child: roundedButton(
                       "Camera",
                       EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
-                      Theme.of(context).buttonColor,
+                      Colors.white,
                       Colors.black,
                       Icons.camera_alt_outlined),
                 ),
@@ -94,7 +94,7 @@ class ImagePickerDialog extends StatelessWidget {
                   child: roundedButton(
                       "Gallery",
                       EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
-                      Theme.of(context).buttonColor,
+                      Colors.white,
                       Colors.black,
                       Icons.photo_library),
                 ),

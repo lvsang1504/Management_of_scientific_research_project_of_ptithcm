@@ -44,7 +44,6 @@ class _UserScreenState extends State<UserScreen>
     imagePicker = ImagePickerHandler(this, _controller);
     imagePicker.init();
 
-    usersBloc.getUsers(FirebaseAuth.instance.currentUser.uid ?? "");
     super.initState();
   }
 
@@ -169,6 +168,8 @@ class _UserScreenState extends State<UserScreen>
 
   @override
   Widget build(BuildContext context) {
+    usersBloc.getUsers(FirebaseAuth.instance.currentUser.uid ?? "");
+
     return Scaffold(
       floatingActionButton: Align(
         alignment: Alignment.bottomLeft,

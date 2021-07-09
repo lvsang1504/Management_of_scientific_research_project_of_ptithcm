@@ -21,11 +21,13 @@ class _NotificationScreenState extends State<NotificationScreen>
   @override
   void initState() {
     super.initState();
-    notificationsBloc.getNotifications();
   }
 
   @override
   Widget build(BuildContext context) {
+
+    notificationsBloc.getNotifications();
+
     final size = MediaQuery.of(context).size;
 
     final spinkit = SpinKitCircle(
@@ -75,16 +77,7 @@ class _NotificationScreenState extends State<NotificationScreen>
                 return ListView.builder(
                   itemCount: notifications.length,
                   itemBuilder: (context, int index) {
-                    // DateTime date =
-                    //     DateTime.parse(notifications[index].timeCreated);
-                    // return NotifyItem(
-                    //   size: size,
-                    //   image: item.image,
-                    //   title: item.content,
-                    //   callback:(){},
-                    //   timeCreated: TimeAgo.timeAgoSinceDate(date),
-                    //   isRead: item.isRead,
-                    // );
+                    
                     return buldNotifyItem(
                       size: size,
                       notifications: notifications[index],

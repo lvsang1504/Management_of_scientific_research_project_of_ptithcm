@@ -36,11 +36,12 @@ class _TimelinePageState extends State<TimelinePage>
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
-    getData("N18DCCN123");
   }
 
   @override
   Widget build(BuildContext context) {
+    getData("N18DCCN123");
+
     final spinkit = SpinKitCircle(
       color: Colors.cyan,
       size: 50.0,
@@ -48,68 +49,6 @@ class _TimelinePageState extends State<TimelinePage>
       // controller: AnimationController(
       //     vsync: this, duration: const Duration(milliseconds: 1200)),
     );
-
-    List<Widget> pages = [
-      FutureBuilder<PeriodicReportResponse>(
-          future: getData("N18DCCN123"),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return timelineModel(TimelinePosition.Left, snapshot.data);
-            }
-            return Center(
-                child: SizedBox(
-              height: 70,
-              child: Column(
-                children: [
-                  spinkit,
-                  Spacer(),
-                  Text('${translations.translate("loading")}'),
-                ],
-              ),
-            ));
-            ;
-          }),
-      FutureBuilder<PeriodicReportResponse>(
-          future: getData("N18DCCN123"),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return timelineModel(TimelinePosition.Center, snapshot.data);
-            }
-            return Center(
-                child: SizedBox(
-              height: 70,
-              child: Column(
-                children: [
-                  spinkit,
-                  Spacer(),
-                  Text('${translations.translate("loading")}'),
-                ],
-              ),
-            ));
-            ;
-          }),
-      FutureBuilder<PeriodicReportResponse>(
-          future: getData("N18DCCN123"),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return timelineModel(TimelinePosition.Right, snapshot.data);
-            }
-            return Center(
-                child: SizedBox(
-              height: 70,
-              child: Column(
-                children: [
-                  spinkit,
-                  Spacer(),
-                  Text('${translations.translate("loading")}'),
-                ],
-              ),
-            ));
-            ;
-          }),
-      // timelineModel(TimelinePosition.Center),
-      // timelineModel(TimelinePosition.Right)
-    ];
 
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
@@ -133,8 +72,8 @@ class _TimelinePageState extends State<TimelinePage>
             padding: const EdgeInsets.all(8.0),
             child: GestureDetector(
               child: Icon(Icons.add),
-              onTap: () => Navigator.push(context,
-                            AnimatingRoute(router: AddProcessItem())),
+              onTap: () => Navigator.push(
+                  context, AnimatingRoute(router: AddProcessItem())),
             ),
           ),
         ],
@@ -169,10 +108,32 @@ class _TimelinePageState extends State<TimelinePage>
           ),
         ),
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: pages,
-      ),
+      body: FutureBuilder<PeriodicReportResponse>(
+          future: getData("N18DCCN123"),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return Center(
+                  child: SizedBox(
+                height: 70,
+                child: Column(
+                  children: [
+                    spinkit,
+                    Spacer(),
+                    Text('${translations.translate("loading")}'),
+                  ],
+                ),
+              ));
+              //timelineModel(TimelinePosition.Right, snapshot.data);
+            }
+            return TabBarView(
+              controller: _tabController,
+              children: [
+                timelineModel(TimelinePosition.Left, snapshot.data),
+                timelineModel(TimelinePosition.Center, snapshot.data),
+                timelineModel(TimelinePosition.Right, snapshot.data),
+              ],
+            );
+          }),
     );
   }
 
@@ -192,7 +153,7 @@ class _TimelinePageState extends State<TimelinePage>
 
           return TimelineModel(
             Padding(
-              padding: i == reportResponse.periodicReports.length -1
+              padding: i == reportResponse.periodicReports.length - 1
                   ? const EdgeInsets.only(bottom: 80)
                   : const EdgeInsets.only(bottom: 0),
               child: Card(

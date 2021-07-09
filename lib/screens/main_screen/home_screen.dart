@@ -32,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   void initState() {
     animationController = AnimationController(
         duration: const Duration(milliseconds: 2000), vsync: this);
-    topicsBloc.getTopics();
+    
     super.initState();
   }
 
@@ -121,6 +121,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       controller: AnimationController(
           vsync: this, duration: const Duration(milliseconds: 1200)),
     );
+    topicsBloc.getTopics();
     return FutureBuilder<bool>(
       future: getData(),
       builder: (context, snapshot) {

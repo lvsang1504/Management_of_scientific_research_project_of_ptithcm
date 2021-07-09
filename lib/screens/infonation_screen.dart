@@ -4,9 +4,11 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/animation/animation_route.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/controller/image_controller.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/models/user_api.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/repositories/user_repository.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/screens/splash_screen.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/widgets/image_pick_and_crop/image_picker_handler.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/widgets/widget_circular_animation.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
@@ -94,7 +96,8 @@ class _InfomationScreenState extends State<InfomationScreen>
           );
         _btnSaveController.success();
         Timer(Duration(milliseconds: 1200), () {
-          Navigator.pop(context);
+          Navigator.pushReplacement(context,
+                            AnimatingRoute(router: SplashScreen()));
         });
       } else {
         ScaffoldMessenger.of(context)
