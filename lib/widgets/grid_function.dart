@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/animation/animation_route.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/controller/translations.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/screens/statistical_screen.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/widgets/scroll_text.dart';
 
 class GridFunction extends StatefulWidget {
@@ -36,6 +38,13 @@ class _GridFunctionState extends State<GridFunction> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   ItemButton(
+                    icon: Icons.bar_chart_rounded,
+                    title:
+                        "${translations.translate("funtion.name.statistical")}",
+                    onTap: () => Navigator.push(
+                        context, AnimatingRoute(router: StatisticalScreen())),
+                  ),
+                  ItemButton(
                     icon: Icons.app_registration,
                     title: "${translations.translate("funtion.name.register")}",
                   ),
@@ -46,12 +55,8 @@ class _GridFunctionState extends State<GridFunction> {
                   ),
                   ItemButton(
                     icon: Icons.search_sharp,
-                    title: "${translations.translate("funtion.name.lookupInfo")}",
-                  ),
-                  ItemButton(
-                    icon: Icons.bar_chart_rounded,
-                    title: "${translations.translate("funtion.name.statistical")}",
-                    onTap: () {},
+                    title:
+                        "${translations.translate("funtion.name.lookupInfo")}",
                   ),
                 ],
               ),

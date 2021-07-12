@@ -58,6 +58,8 @@ dependencies:
     sdk: flutter
   date_time_picker: "^2.0.0"
 
+  fl_chart: ^0.36.2
+
 
 dev_dependencies:
   flutter_test:
