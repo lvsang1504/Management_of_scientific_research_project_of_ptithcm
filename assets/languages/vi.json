@@ -63,6 +63,7 @@
   "setting.language.selectlanguage": "Chọn ngôn ngữ",
   "setting.darkMode": "Chế độ tối",
   "setting.logout": "Đăng xuất",
+  "setting.aboutus": "Về chúng tôi",
 
   "funtion.name.register" : "Đăng ký đề tài",
   "funtion.name.approve" : "Phê duyệt chủ đề",
@@ -71,6 +72,9 @@
   "funtion.name.member" : "Thành viên",
   "funtion.name.report" : "Báo cáo",
   "funtion.name.account" : "Quản lý tài khoản",
+
+  "dialog.infomation": "Bạn chưa có thông tin",
+  "dialog.infomation.button": "Thêm thông tin của bạn",
 
   "account.username": "Tên người dùng",
   "account.email": "Email",

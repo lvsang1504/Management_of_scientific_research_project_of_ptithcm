@@ -13,6 +13,7 @@ import 'package:management_of_scientific_research_project_of_ptithcm/controller/
 import 'package:management_of_scientific_research_project_of_ptithcm/controller/translations.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/models/user_api.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/repositories/user_repository.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/screens/AboutUsScreen.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/screens/setting_screen/font_size_setting_screen.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/screens/setting_screen/language_screen.dart';
 
@@ -185,6 +186,9 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                         title: Row(
                           children: [
                             Icon(Icons.nights_stay_rounded),
+                            SizedBox(
+                              width: 5,
+                            ),
                             Text(
                                 '${translations.translate("setting.darkMode")}'),
                             Spacer(),
@@ -215,6 +219,24 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                     child: ListTile(
                       title: Row(
                         children: [
+                          Icon(Icons.apps_outlined),
+                          SizedBox(
+                            width: 12,
+                          ),
+                          Text('${translations.translate("setting.aboutus")}'),
+                        ],
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                            context, AnimatingRoute(router: AboutUsScreen()));
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 100),
+                    child: ListTile(
+                      title: Row(
+                        children: [
                           Icon(Icons.exit_to_app),
                           SizedBox(
                             width: 12,
@@ -237,7 +259,6 @@ class _DrawerWidgetState extends State<DrawerWidget> {
     );
   }
 }
-
 
 // Class which draws the custom shape
 class DrawerPainter extends CustomPainter {

@@ -94,7 +94,10 @@ class UserRepository {
       if (response.statusCode == 200) {
         final jsonResponse = convert.jsonDecode(response.body);
         return UserApi.fromJson(jsonResponse);
-      } else {
+      } else if(response.statusCode == 404){
+        print("Not found!");
+      }
+      else {
         throw Exception('Failed to load post');
       }
     } catch (error, stacktrace) {

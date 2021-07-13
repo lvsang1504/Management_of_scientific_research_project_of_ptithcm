@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -5,6 +6,9 @@ import 'package:management_of_scientific_research_project_of_ptithcm/blocs/data_
 import 'package:management_of_scientific_research_project_of_ptithcm/controller/translations.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/models/topic.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/models/topic_response.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/models/user_api.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/repositories/user_repository.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/screens/infonation_screen.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/screens/search_screen.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/screens/topic_screen.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/widgets/drawer_widget.dart';
@@ -21,7 +25,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   AnimationController animationController;
-  
+
   final ScrollController _scrollController = ScrollController();
   final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
@@ -32,13 +36,18 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   void initState() {
     animationController = AnimationController(
         duration: const Duration(milliseconds: 2000), vsync: this);
-    
+
     super.initState();
   }
 
   Future<bool> getData() async {
     await Future.delayed(const Duration(milliseconds: 0));
     return true;
+  }
+
+  Future<UserApi> getUser(String firebaseKey) async {
+    var userApi = await UserRepository().getUserApi(firebaseKey);
+    return userApi;
   }
 
   @override
@@ -60,58 +69,168 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: buildAppBar(context),
-      drawer: DrawerWidget(),
-      body: Stack(
-        children: [
-          InkWell(
-            splashColor: Colors.transparent,
-            focusColor: Colors.transparent,
-            highlightColor: Colors.transparent,
-            hoverColor: Colors.transparent,
-            onTap: () {
-              FocusScope.of(context).requestFocus(FocusNode());
-            },
-            child: Column(
-              children: [
-                Expanded(
-                  child: NestedScrollView(
-                    controller: _scrollController,
-                    headerSliverBuilder:
-                        (BuildContext context, bool innerBoxIsScrolled) {
-                      return [
-                        SliverList(
-                          delegate: SliverChildBuilderDelegate(
-                              (BuildContext context, int index) {
-                            return Column(
-                              children: [
-                                getSearchBarUI(),
-                                GridFunction(),
-                              ],
-                            );
-                          }, childCount: 1),
-                        ),
-                        SliverPersistentHeader(
-                          pinned: true,
-                          floating: true,
-                          delegate: ContestTabHeader(
-                            getFilterBarUI(
-                            title: "${countFound ?? ""} ${translations.translate("screen.home.topicsFound")}",
+    return FutureBuilder<UserApi>(
+        future: getUser(FirebaseAuth.instance.currentUser.uid),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.data == null) {
+              return Container(
+                color: Colors.white24,
+                child: AlertDialog(
+                  content: Container(
+                    width: 260.0,
+                    height: 230.0,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.rectangle,
+                      color: const Color(0xFFFFFF),
+                      borderRadius: BorderRadius.all(Radius.circular(32.0)),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Center(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                            ),
+                            child: Center(
+                              child: Text(
+                                translations.translate("dialog.infomation"),
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 18.0,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
                             ),
                           ),
                         ),
-                      ];
-                    },
-                    body: buildTopics(),
+                        Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: Icon(
+                            Icons.info_outline,
+                            size: 50,
+                            color: Colors.redAccent,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: GestureDetector(
+                            onTap: () => Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => InfomationScreen())),
+                            child: Container(
+                              padding: EdgeInsets.all(16.0),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF33b17c),
+                              ),
+                              child: Text(
+                                translations.translate("dialog.infomation.button"),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18.0,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            }
+          }
+
+          return Scaffold(
+            appBar: buildAppBar(context),
+            drawer: DrawerWidget(),
+            body: Stack(
+              children: [
+                InkWell(
+                  splashColor: Colors.transparent,
+                  focusColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
+                  hoverColor: Colors.transparent,
+                  onTap: () {
+                    FocusScope.of(context).requestFocus(FocusNode());
+                  },
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: NestedScrollView(
+                          controller: _scrollController,
+                          headerSliverBuilder:
+                              (BuildContext context, bool innerBoxIsScrolled) {
+                            return [
+                              SliverList(
+                                delegate: SliverChildBuilderDelegate(
+                                    (BuildContext context, int index) {
+                                  return Column(
+                                    children: [
+                                      getSearchBarUI(),
+                                      GridFunction(),
+                                    ],
+                                  );
+                                }, childCount: 1),
+                              ),
+                              SliverPersistentHeader(
+                                pinned: true,
+                                floating: true,
+                                delegate: ContestTabHeader(
+                                  getFilterBarUI(
+                                    title:
+                                        "${countFound ?? ""} ${translations.translate("screen.home.topicsFound")}",
+                                  ),
+                                ),
+                              ),
+                            ];
+                          },
+                          body: buildTopics(),
+                        ),
+                      ),
+                      // FutureBuilder<UserApi>(
+                      //     future:
+                      //         getUser(FirebaseAuth.instance.currentUser.uid),
+                      //     builder: (context, snapshot) {
+                      //       if (snapshot.connectionState ==
+                      //           ConnectionState.done) {
+                      //         if (snapshot.data != null) {
+                      //           return Container();
+                      //         } else {
+                      //           return  AlertDialog(
+                      //             content: Text(
+                      //               'Message Here',
+                      //             ),
+                      //             actions: <Widget>[
+                      //               GestureDetector(
+                      //                 child: const Text('OK'),
+                      //                 onTap: () {
+                      //                   Navigator.pushReplacement(
+                      //                     context,
+                      //                     MaterialPageRoute(
+                      //                       builder: (context) =>
+                      //                           InfomationScreen(),
+                      //                     ),
+                      //                   );
+                      //                 },
+                      //               ),
+                      //             ],
+                      //           );
+                      //         }
+                      //       }
+                      //       return Container();
+                      //     }),
+                    ],
                   ),
                 ),
               ],
             ),
-          ),
-        ],
-      ),
-    );
+          );
+        });
   }
 
   Widget buildTopics() {
@@ -135,8 +254,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         } else {
           return Padding(
             padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-            child: Column( 
-              mainAxisAlignment:  MainAxisAlignment.center,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
@@ -339,7 +458,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   //cursorColor: Theme.of(context).primaryColor,
                   decoration: InputDecoration(
                     border: InputBorder.none,
-                    hintText: "${translations.translate("screen.home.hintText")}",
+                    hintText:
+                        "${translations.translate("screen.home.hintText")}",
                   ),
                 ),
               ),
@@ -437,4 +557,3 @@ class ContestTabHeader extends SliverPersistentHeaderDelegate {
     return true;
   }
 }
-

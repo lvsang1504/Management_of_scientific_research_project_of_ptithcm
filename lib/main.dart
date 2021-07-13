@@ -42,7 +42,7 @@ void main() async {
   initScreen = prefs.getInt("initScreen");
   await prefs.setInt("initScreen", 1);
   print('initScreen $initScreen');
-
+  //////////////////////////////////////////////////////////////////////////////////
   runApp(
     MultiBlocProvider(
       providers: [

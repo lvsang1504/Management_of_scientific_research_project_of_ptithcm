@@ -2,8 +2,8 @@
     package="com.example.management_of_scientific_research_project_of_ptithcm">
     <uses-permission android:name="android.permission.INTERNET"/>
    <application
-        android:label="management_of_scientific_research_project_of_ptithcm"
-        android:icon="@mipmap/ic_launcher">
+        android:label="Sciencefic Resaerch PTIT"
+        android:icon="@mipmap/logo">
         <activity
         android:name="com.yalantis.ucrop.UCropActivity"
         android:screenOrientation="portrait"

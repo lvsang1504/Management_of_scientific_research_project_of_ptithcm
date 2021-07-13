@@ -4,7 +4,6 @@ import 'package:management_of_scientific_research_project_of_ptithcm/repositorie
 import 'package:management_of_scientific_research_project_of_ptithcm/screens/splash_screen.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/utils/styles.dart';
 
-
 class OnboardingScreen extends StatefulWidget {
   final UserRepository userRepository;
 
@@ -68,9 +67,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   child: FlatButton(
                     onPressed: () {
                       _currentPage = _numPages - 1;
-                      setState(() {
-                        
-                      });
+                      setState(() {});
                     },
                     child: Text(
                       'Skip',
@@ -229,7 +226,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   padding: EdgeInsets.only(bottom: 15.0),
                   child: Container(
                     decoration: BoxDecoration(
-                      border: Border.all(color: Color(0xFF5B16D0), width: 2,),
+                      border: Border.all(
+                        color: Color(0xFF5B16D0),
+                        width: 2,
+                      ),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: GestureDetector(
