@@ -8,7 +8,6 @@ import 'package:management_of_scientific_research_project_of_ptithcm/blocs/authe
 import 'package:management_of_scientific_research_project_of_ptithcm/blocs/authentication_bloc/authentication_state.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/controller/translations.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/repositories/user_repository.dart';
-import 'package:management_of_scientific_research_project_of_ptithcm/screens/onboarding_screen.dart';
 
 import 'bottom_navigation.dart';
 import 'login/login_screen.dart';
@@ -38,13 +37,9 @@ class _SplashScreenState extends State<SplashScreen>
                 BlocBuilder<AuthenticationBloc, AuthenticationState>(
                   builder: (context, state) {
                     if (state is AuthenticationFailure) {
-                      // if (widget.initScreen == 0 || widget.initScreen == null) {
-                      //   Navigator.push(context, MaterialPageRoute(builder: (context) => OnboardingScreen(userRepository: widget.userRepository,)));
-                      // } else {
                       return LoginScreen(
                         userRepository: widget.userRepository,
                       );
-                      //}
                     }
                     if (state is AuthenticationSuccess) {
                       return BottomNavigationWidget();

@@ -6,8 +6,6 @@ import 'package:http/http.dart' as http;
 import 'package:management_of_scientific_research_project_of_ptithcm/models/user_api.dart';
 import 'dart:convert' as convert;
 
-import 'package:management_of_scientific_research_project_of_ptithcm/models/user_response.dart';
-
 class UserRepository {
   final FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
@@ -89,7 +87,7 @@ class UserRepository {
   Future<UserApi> getUserApi(String firebaseKey) async {
     try {
       final response = await http.get(Uri.parse(
-          'https://ptithcm.azurewebsites.net/api/users/firebaseKey=$firebaseKey'));
+          'https://10.0.2.2:5001/api/users/firebaseKey=$firebaseKey'));
 
       if (response.statusCode == 200) {
         final jsonResponse = convert.jsonDecode(response.body);
@@ -109,7 +107,7 @@ class UserRepository {
   Future<bool> createUser(UserApi userApi) async {
     try {
       final response = await http.post(
-        Uri.parse('https://ptithcm.azurewebsites.net/api/users/'),
+        Uri.parse('https://10.0.2.2:5001/api/users/'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -130,7 +128,7 @@ class UserRepository {
   Future<bool> updateUser(UserApi userApi, String keyFirebase) async {
     try {
       final response = await http.put(
-        Uri.parse('https://ptithcm.azurewebsites.net/api/users/update=$keyFirebase'),
+        Uri.parse('https://10.0.2.2:5001/api/users/update=$keyFirebase'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },

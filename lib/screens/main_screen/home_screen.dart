@@ -15,6 +15,7 @@ import 'package:management_of_scientific_research_project_of_ptithcm/widgets/dra
 import 'package:management_of_scientific_research_project_of_ptithcm/widgets/grid_function.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/widgets/topic_list_view.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 int countFound;
 
@@ -31,6 +32,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       RefreshController(initialRefresh: false);
   TextEditingController searchController = TextEditingController();
   bool multiple = false;
+  ////
+  void setPermissionUser(int role) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setInt("permission", role);
+    print('permission: $role');
+  }
 
   @override
   void initState() {
@@ -127,7 +134,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                 color: const Color(0xFF33b17c),
                               ),
                               child: Text(
-                                translations.translate("dialog.infomation.button"),
+                                translations
+                                    .translate("dialog.infomation.button"),
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 18.0,
@@ -142,6 +150,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   ),
                 ),
               );
+            } else {
+              setPermissionUser(snapshot.data.role);
             }
           }
 

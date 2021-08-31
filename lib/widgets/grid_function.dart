@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/animation/animation_route.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/controller/data_local.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/controller/translations.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/screens/statistical_screen.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/widgets/scroll_text.dart';
@@ -12,82 +13,95 @@ class GridFunction extends StatefulWidget {
 class _GridFunctionState extends State<GridFunction> {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 10, left: 10, bottom: 10),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          gradient: LinearGradient(
-            colors: [
-              Colors.cyan,
-              Colors.cyanAccent.withOpacity(0.3),
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
-        height: 120,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SimpleCarousel(
-            colorIconCircleBar: Colors.white,
-            colorIconCircleBarActive: Colors.deepOrange,
-            numberPages: 2,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  ItemButton(
-                    icon: Icons.bar_chart_rounded,
-                    title:
-                        "${translations.translate("funtion.name.statistical")}",
-                    onTap: () => Navigator.push(
-                        context, AnimatingRoute(router: StatisticalScreen())),
+    return FutureBuilder<int>(
+        future: DataLocal().getPermissionUser(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return Padding(
+              padding: const EdgeInsets.only(right: 10, left: 10, bottom: 10),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  gradient: LinearGradient(
+                    colors: [
+                      Colors.cyan,
+                      Colors.cyanAccent.withOpacity(0.3),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
                   ),
-                  ItemButton(
-                    icon: Icons.app_registration,
-                    title: "${translations.translate("funtion.name.register")}",
+                ),
+                height: 120,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SimpleCarousel(
+                    colorIconCircleBar: Colors.white,
+                    colorIconCircleBarActive: Colors.deepOrange,
+                    numberPages: 2,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          ItemButton(
+                            icon: Icons.bar_chart_rounded,
+                            title:
+                                "${translations.translate("funtion.name.statistical")}",
+                            onTap: () => Navigator.push(context,
+                                AnimatingRoute(router: StatisticalScreen())),
+                          ),
+                          ItemButton(
+                            icon: Icons.app_registration,
+                            title:
+                                "${translations.translate("funtion.name.register")}",
+                          ),
+                          ItemButton(
+                            icon: Icons.approval,
+                            title:
+                                "${translations.translate("funtion.name.approve")}",
+                            onTap: () {},
+                          ),
+                          ItemButton(
+                            icon: Icons.search_sharp,
+                            title:
+                                "${translations.translate("funtion.name.lookupInfo")}",
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          ItemButton(
+                            icon: Icons.group_work_outlined,
+                            title:
+                                "${translations.translate("funtion.name.member")}",
+                            onTap: () {},
+                          ),
+                          ItemButton(
+                            icon: Icons.recent_actors_outlined,
+                            title:
+                                "${translations.translate("funtion.name.report")}",
+                          ),
+                          ItemButton(
+                            icon: Icons.account_box_rounded,
+                            title:
+                                "${translations.translate("funtion.name.account")}",
+                            onTap: () {},
+                          ),
+                          ItemButton(
+                            icon: Icons.recent_actors_outlined,
+                            title:
+                                "${translations.translate("funtion.name.account")}",
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                  ItemButton(
-                    icon: Icons.approval,
-                    title: "${translations.translate("funtion.name.approve")}",
-                    onTap: () {},
-                  ),
-                  ItemButton(
-                    icon: Icons.search_sharp,
-                    title:
-                        "${translations.translate("funtion.name.lookupInfo")}",
-                  ),
-                ],
+                ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  ItemButton(
-                    icon: Icons.group_work_outlined,
-                    title: "${translations.translate("funtion.name.member")}",
-                    onTap: () {},
-                  ),
-                  ItemButton(
-                    icon: Icons.recent_actors_outlined,
-                    title: "${translations.translate("funtion.name.report")}",
-                  ),
-                  ItemButton(
-                    icon: Icons.account_box_rounded,
-                    title: "${translations.translate("funtion.name.account")}",
-                    onTap: () {},
-                  ),
-                  ItemButton(
-                    icon: Icons.recent_actors_outlined,
-                    title: "${translations.translate("funtion.name.account")}",
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+            );
+          } else
+            return SizedBox();
+        });
   }
 }
 

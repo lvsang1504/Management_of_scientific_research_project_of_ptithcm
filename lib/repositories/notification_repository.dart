@@ -6,7 +6,7 @@ class NotificationRepository {
   Future<NotificationResponse> getNotifications() async {
     try {
       final response = await http.get(Uri.parse(
-          'https://ptithcm.azurewebsites.net/api/notifications/idStudent=N18DCCN123'));
+          'https://10.0.2.2:5001/api/notifications/idStudent=N18DCCN123'));
 
       if (response.statusCode == 200) {
         final jsonResponse = convert.jsonDecode(response.body);
@@ -22,7 +22,7 @@ class NotificationRepository {
 
   Future<bool> updateIsRead(bool isRead, int id) async {
     final response = await http.patch(
-      Uri.parse('https://ptithcm.azurewebsites.net/api/notifications/$id'),
+      Uri.parse('https://10.0.2.2:5001/api/notifications/$id'),
       headers: <String, String>{
         'Content-Type': 'application/json',
       },
@@ -39,7 +39,7 @@ class NotificationRepository {
 
   Future<bool> deleteNotification(bool isDelete, int id) async {
     final response = await http.patch(
-      Uri.parse('https://ptithcm.azurewebsites.net/api/notifications/$id'),
+      Uri.parse('https://10.0.2.2:5001/api/notifications/$id'),
       headers: <String, String>{
         'Content-Type': 'application/json',
       },
