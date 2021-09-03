@@ -7,15 +7,15 @@ class Notifications {
   final bool isRead;
   final bool isDelete;
 
-  Notifications(
+  Notifications({
     this.id,
     this.content,
     this.idStudent,
     this.image,
     this.timeCreated,
-    this.isRead,
-    this.isDelete,
-  );
+    this.isRead = false,
+    this.isDelete = false,
+  });
 
   Notifications.fromJson(Map<String, dynamic> json)
       : id = json["id"],
@@ -25,4 +25,14 @@ class Notifications {
         timeCreated = json["timeCreated"],
         isRead = json["isRead"],
         isDelete = json["isDelete"];
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "content": content,
+        "idStudent": idStudent,
+        "image": image,
+        "timeCreated": timeCreated,
+        "isRead": isRead,
+        "isDelete": isDelete
+      };
 }

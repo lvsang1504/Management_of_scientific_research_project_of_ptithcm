@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/animation/animation_route.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/controller/data_local.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/controller/translations.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/screens/add_topic_screen.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/screens/statistical_screen.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/widgets/scroll_text.dart';
 
@@ -51,14 +52,15 @@ class _GridFunctionState extends State<GridFunction> {
                           ),
                           ItemButton(
                             icon: Icons.app_registration,
-                            title:
-                                "${translations.translate("funtion.name.register")}",
+                            title: "Thêm đề tài",
+                            onTap: () => Navigator.push(context,
+                                AnimatingRoute(router: AddTopicScreen())),
                           ),
                           ItemButton(
                             icon: Icons.approval,
                             title:
                                 "${translations.translate("funtion.name.approve")}",
-                            onTap: () {},
+                           
                           ),
                           ItemButton(
                             icon: Icons.search_sharp,

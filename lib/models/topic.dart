@@ -11,8 +11,8 @@ class Topic {
   final String acceptanceTime;
   final String note;
 
-  Topic(
-    this.id,
+  Topic({
+    this.id = 0,
     this.topicCode,
     this.name,
     this.field,
@@ -23,7 +23,7 @@ class Topic {
     this.dateCreated,
     this.acceptanceTime,
     this.note,
-  );
+  });
 
   Topic.fromJson(Map<String, dynamic> json)
       : id = json["id"],
@@ -37,6 +37,17 @@ class Topic {
         dateCreated = json["dateCreated"],
         acceptanceTime = json["acceptanceTime"],
         note = json["note"];
-
-    
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "topicCode": topicCode,
+        "name": name,
+        "field": field,
+        "content": content,
+        "image": image,
+        "type": type,
+        "budget": budget,
+        "dateCreated": dateCreated,
+        "acceptanceTime": acceptanceTime,
+        "note": note,
+      };
 }

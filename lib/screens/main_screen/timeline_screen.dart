@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/animation/animation_route.dart';
@@ -25,6 +26,8 @@ class _TimelinePageState extends State<TimelinePage>
       PageController(initialPage: 1, keepPage: true);
   int pageIx = 1;
 
+  int idTopic=0;
+
   Future<PeriodicReportResponse> getData(String key) async {
     var periodicReportResponse =
         await PeriodicReportRepository().getPeriodicReports(key);
@@ -40,7 +43,7 @@ class _TimelinePageState extends State<TimelinePage>
 
   @override
   Widget build(BuildContext context) {
-    getData("N18DCCN123");
+    getData(FirebaseAuth.instance.currentUser.uid);
 
     final spinkit = SpinKitCircle(
       color: Colors.cyan,
@@ -73,7 +76,7 @@ class _TimelinePageState extends State<TimelinePage>
             child: GestureDetector(
               child: Icon(Icons.add),
               onTap: () => Navigator.push(
-                  context, AnimatingRoute(router: AddProcessItem())),
+                  context, AnimatingRoute(router: AddProcessItem(idTopic: idTopic,))),
             ),
           ),
         ],
@@ -109,8 +112,8 @@ class _TimelinePageState extends State<TimelinePage>
         ),
       ),
       body: FutureBuilder<PeriodicReportResponse>(
-          future: getData("N18DCCN123"),
-          builder: (context, snapshot) {
+          future: getData(FirebaseAuth.instance.currentUser.uid),
+          builder: (context, AsyncSnapshot<PeriodicReportResponse> snapshot) {
             if (!snapshot.hasData) {
               return Center(
                   child: SizedBox(
@@ -124,6 +127,22 @@ class _TimelinePageState extends State<TimelinePage>
                 ),
               ));
               //timelineModel(TimelinePosition.Right, snapshot.data);
+            }
+
+            
+
+            idTopic  =  int.parse(snapshot.data.periodicReports[0].topicCode);
+
+            if (snapshot.data.periodicReports.length == 0) {
+              return Center(
+                child: Text(
+                  "Bạn chưa đăng kí đề tài nào.",
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              );
             }
             return TabBarView(
               controller: _tabController,

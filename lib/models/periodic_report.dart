@@ -19,7 +19,7 @@ class PeriodicReport {
     this.dateEnd,
   });
 
-   PeriodicReport.fromJson(Map<String, dynamic> json)
+  PeriodicReport.fromJson(Map<String, dynamic> json)
       : id = json["id"],
         topicCode = json["topicCode"],
         idStudent = json["name"],
@@ -28,4 +28,16 @@ class PeriodicReport {
         image = json["image"],
         dateStarted = json["dateStarted"],
         dateEnd = json["dateEnd"];
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "topicCode": topicCode,
+        "idStudent": idStudent,
+        "field": field,
+        "content": content,
+        "image": image,
+        "dateStarted": dateStarted,
+        "dateEnd": dateEnd,
+
+      };
 }

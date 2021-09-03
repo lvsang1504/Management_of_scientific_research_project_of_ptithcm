@@ -6,8 +6,8 @@ class NotificationListBloc {
   final NotificationRepository _repository = NotificationRepository();
   final BehaviorSubject<NotificationResponse> _subject = BehaviorSubject();
 
-  getNotifications() async {
-    NotificationResponse response = await _repository.getNotifications();
+  getNotifications(String idStudent) async {
+    NotificationResponse response = await _repository.getNotifications(idStudent);
     _subject.sink.add(response);
   }
 

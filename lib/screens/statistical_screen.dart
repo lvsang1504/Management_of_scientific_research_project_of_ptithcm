@@ -1,13 +1,35 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/animation/animation_route.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/controller/translations.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/models/notification.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/models/periodic_report.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/models/register.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/models/register_response.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/models/topic.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/models/user_api.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/repositories/fake_repository.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/repositories/notification_repository.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/repositories/periodic_report_repository.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/repositories/register_repository.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/repositories/topic_repository.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/repositories/user_repository.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/screens/topic_screen.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/widgets/config/colors.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/widgets/config/strings.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/widgets/pie_chart/pie_chart.dart';
 
-class StatisticalScreen extends StatelessWidget {
+import 'add_process_item.dart';
+
+class StatisticalScreen extends StatefulWidget {
+  @override
+  _StatisticalScreenState createState() => _StatisticalScreenState();
+}
+
+class _StatisticalScreenState extends State<StatisticalScreen> {
   final _data = FakeRepository.data;
+
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -163,64 +185,305 @@ class StatisticalScreen extends StatelessWidget {
     );
   }
 
+  Future<RegisterResponse> getInfoRegister() async {
+    return await RegisterRepository().getAllRegisters();
+  }
+
   Widget _row2by2Widget(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
             children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: _singleItemQuickStats(
-                  context,
-                  title: "Total Bookings",
-                  value: "28,345",
-                  width: MediaQuery.of(context).size.width / 2.6,
-                  icon: null,
-                ),
+              Expanded(
+                child: Text("Chủ đề"),
+                flex: 4,
               ),
               Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: _singleItemQuickStats(
-                  context,
-                  title: "Pending Approval",
-                  value: "180",
-                  icon: null,
-                  width: MediaQuery.of(context).size.width / 2.6,
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Container(
+                  width: 3,
+                  height: 20,
+                  color: Colors.grey,
                 ),
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text("Sinh viên đăng kí"),
+                ),
+                flex: 3,
               ),
             ],
           ),
-          SizedBox(
-            height: 8,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: _singleItemQuickStats(context,
-                    title: "New Clients This Month",
-                    value: "810",
-                    icon: Icons.arrow_upward,
-                    iconColor: Colors.green,
-                    width: MediaQuery.of(context).size.width / 2.6),
+        ),
+        Divider(
+          height: 4,
+          color: Colors.black,
+        ),
+        SizedBox(
+          height: 200,
+          child: FutureBuilder<RegisterResponse>(
+              future: getInfoRegister(),
+              builder: (context, AsyncSnapshot<RegisterResponse> snapshot) {
+                if (!snapshot.hasData) {
+                  return CircularProgressIndicator();
+                }
+
+                List<Register> registers = snapshot.data.registers
+                    .where((element) => element.browseTopic == 0)
+                    .toList();
+                print(registers.length);
+                return ListView.builder(
+                  itemCount: registers.length,
+                  itemBuilder: (context, int index) {
+                    return buildRegisterItem(registers[index]);
+                  },
+                );
+              }),
+        ),
+        Divider(
+          height: 4,
+          color: Colors.black,
+        ),
+      ],
+    );
+  }
+
+  Future<Topic> getTopic(int idTopic) async {
+    return await TopicRepository().getTopicById(idTopic);
+  }
+
+  Future<UserApi> getUser(String idUser) async {
+    return await UserRepository().getUserApi(idUser);
+  }
+
+  Widget buildRegisterItem(Register register) {
+    Topic topic;
+    UserApi userApi;
+    return SizedBox(
+      height: 120,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: GestureDetector(
+          onTap: () {
+            Navigator.push(
+                context,
+                AnimatingRoute(
+                    router: TopicScreen(
+                  topic: topic,
+                )));
+          },
+          child: Card(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        flex: 6,
+                        child: FutureBuilder<Topic>(
+                            future: getTopic(register.idTopic),
+                            builder: (context, snapshot) {
+                              if (!snapshot.hasData) {
+                                return CircularProgressIndicator();
+                              }
+                              topic = snapshot.data;
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 10),
+                                child: Text(
+                                  topic.name,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              );
+                            }),
+                      ),
+                      Expanded(
+                        flex: 3,
+                        child: FutureBuilder<UserApi>(
+                            future: getUser(register.idStudent),
+                            builder: (context, snapshot) {
+                              if (!snapshot.hasData) {
+                                return CircularProgressIndicator();
+                              }
+
+                              userApi = snapshot.data;
+
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 10),
+                                child: Text(
+                                  snapshot.data.name,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              );
+                            }),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: GestureDetector(
+                          onTap: () async {
+                            //register
+                            await RegisterRepository()
+                                    .updaetRegisterBrowse(register.id)
+                                ? print("success")
+                                : print("failse");
+
+                            // push notification
+
+                            bool check = await NotificationRepository()
+                                .createNotification(Notifications(
+                              content:
+                                  "Yêu cầu đề tài bạn đã được duyêt.\nĐề tài ${topic.name}",
+                              image: topic.image,
+                              idStudent: userApi.keyFirebase,
+                              timeCreated: DateTime.now().toString(),
+                            ));
+                            if (check) {
+                              print("success noti");
+                            } else {
+                              print("false noti");
+                            }
+
+                            //create timeline
+                            await PeriodicReportRepository()
+                                    .createPeriodicReport(
+                              PeriodicReport(
+                                topicCode: topic.id.toString(),
+                                idStudent: userApi.keyFirebase,
+                                field: topic.field,
+                                content: topic.name,
+                                image: topic.image,
+                                dateStarted: DateTime.now().toString(),
+                                dateEnd: topic.acceptanceTime,
+                              ),
+                            )
+                                ? print("create timeline success")
+                                : print("create timeline false");
+
+                            ScaffoldMessenger.of(context)
+                              ..removeCurrentSnackBar()
+                              ..showSnackBar(
+                                SnackBar(
+                                  content: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Text("Đã duyệt đề tài"),
+                                      Icon(
+                                        Icons.error,
+                                        color: Colors.redAccent,
+                                      ),
+                                    ],
+                                  ),
+                                  backgroundColor: Colors.black38,
+                                ),
+                              );
+                            setState(() {});
+                          },
+                          child: Column(
+                            children: [
+                              Icon(Icons.playlist_add),
+                              Text(
+                                "Duyệt",
+                                style: TextStyle(fontSize: 8),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: GestureDetector(
+                          onTap: () async {
+                            if (await RegisterRepository()
+                                .deleteRegister(register.id)) {
+                              bool check = await NotificationRepository()
+                                  .createNotification(Notifications(
+                                content:
+                                    "Yêu cầu đề tài bạn đã bị từ chối.\nĐề tài ${topic.name}",
+                                image: topic.image,
+                                idStudent: userApi.keyFirebase,
+                                timeCreated: DateTime.now().toString(),
+                              ));
+                              if (check) {
+                                print("success noti");
+                              } else {
+                                print("false noti");
+                              }
+
+                              ScaffoldMessenger.of(context)
+                                ..removeCurrentSnackBar()
+                                ..showSnackBar(
+                                  SnackBar(
+                                    content: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Text("Từ chối yêu cầu"),
+                                        Icon(
+                                          Icons.error,
+                                          color: Colors.redAccent,
+                                        ),
+                                      ],
+                                    ),
+                                    backgroundColor: Colors.black38,
+                                  ),
+                                );
+                            } else {
+                              ScaffoldMessenger.of(context)
+                                ..removeCurrentSnackBar()
+                                ..showSnackBar(
+                                  SnackBar(
+                                    content: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Text("Lỗi"),
+                                        Icon(
+                                          Icons.error,
+                                          color: Colors.redAccent,
+                                        ),
+                                      ],
+                                    ),
+                                    backgroundColor: Colors.black38,
+                                  ),
+                                );
+                            }
+                            setState(() {});
+                          },
+                          child: Column(
+                            children: [
+                              Icon(Icons.remove_circle),
+                              Text(
+                                "Từ chối",
+                                style: TextStyle(fontSize: 8),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                ],
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: _singleItemQuickStats(context,
-                    title: "Returning Clients",
-                    value: "20%",
-                    icon: Icons.arrow_downward,
-                    width: MediaQuery.of(context).size.width / 2.6,
-                    iconColor: Colors.red),
-              ),
-            ],
+            ),
           ),
-        ],
+        ),
       ),
     );
   }

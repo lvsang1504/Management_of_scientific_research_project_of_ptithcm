@@ -1,12 +1,35 @@
+import 'package:management_of_scientific_research_project_of_ptithcm/models/notification.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/models/notification_response.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 
 class NotificationRepository {
-  Future<NotificationResponse> getNotifications() async {
+
+  Future<bool> createNotification(Notifications notifications) async {
+    try {
+      final response = await http.post(
+        Uri.parse('https://10.0.2.2:5001/api/notifications/'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: convert.jsonEncode(notifications.toJson()),
+      );
+
+      if (response.statusCode == 201) {
+        return true;
+      } else {
+        throw Exception('Failed to load post');
+      }
+    } catch (error, stacktrace) {
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return false;
+    }
+  }
+
+  Future<NotificationResponse> getNotifications(String id) async {
     try {
       final response = await http.get(Uri.parse(
-          'https://10.0.2.2:5001/api/notifications/idStudent=N18DCCN123'));
+          'https://10.0.2.2:5001/api/notifications/idStudent=$id'));
 
       if (response.statusCode == 200) {
         final jsonResponse = convert.jsonDecode(response.body);

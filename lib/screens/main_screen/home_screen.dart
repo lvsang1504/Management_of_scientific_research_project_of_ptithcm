@@ -39,6 +39,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     print('permission: $role');
   }
 
+  Future<int> gettPermissionUser() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return await prefs.getInt("permission");
+  }
+
   @override
   void initState() {
     animationController = AnimationController(
@@ -78,9 +83,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return FutureBuilder<UserApi>(
         future: getUser(FirebaseAuth.instance.currentUser.uid),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            if (snapshot.data == null) {
+        builder: (context, user) {
+          if (user.connectionState == ConnectionState.done) {
+            if (user.data == null) {
               return Container(
                 color: Colors.white24,
                 child: AlertDialog(
@@ -151,7 +156,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 ),
               );
             } else {
-              setPermissionUser(snapshot.data.role);
+              setPermissionUser(user.data.role);
             }
           }
 
@@ -180,9 +185,30 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                 delegate: SliverChildBuilderDelegate(
                                     (BuildContext context, int index) {
                                   return Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       getSearchBarUI(),
-                                      GridFunction(),
+                                      FutureBuilder<int>(
+                                          future: gettPermissionUser(),
+                                          builder: (context, snapshot) {
+                                            if (!snapshot.hasData) {
+                                              return CircularProgressIndicator();
+                                            }
+
+                                            return snapshot.data == 0
+                                                ? GridFunction()
+                                                : Padding(
+                                                  padding: const EdgeInsets.all(20.0),
+                                                  child: Text(
+                                                      "HELLO, ${user.hasData? user.data.name.split(" ").last:""}",
+                                                      style: TextStyle(
+                                                        fontSize: 20,
+                                                        fontWeight: FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                );
+                                          }),
                                     ],
                                   );
                                 }, childCount: 1),

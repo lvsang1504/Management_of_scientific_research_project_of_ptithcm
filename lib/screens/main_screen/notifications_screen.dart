@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -26,7 +27,7 @@ class _NotificationScreenState extends State<NotificationScreen>
   @override
   Widget build(BuildContext context) {
 
-    notificationsBloc.getNotifications();
+    notificationsBloc.getNotifications(FirebaseAuth.instance.currentUser.uid);
 
     final size = MediaQuery.of(context).size;
 
@@ -77,7 +78,6 @@ class _NotificationScreenState extends State<NotificationScreen>
                 return ListView.builder(
                   itemCount: notifications.length,
                   itemBuilder: (context, int index) {
-                    
                     return buldNotifyItem(
                       size: size,
                       notifications: notifications[index],
@@ -218,7 +218,7 @@ class _NotificationScreenState extends State<NotificationScreen>
                         );
                     }
 
-                    notificationsBloc.getNotifications();
+                    notificationsBloc.getNotifications(FirebaseAuth.instance.currentUser.uid);
                   } else if (index == 1) {
                     bool check = await NotificationRepository()
                         .deleteNotification(true, notifications.id);
@@ -259,7 +259,7 @@ class _NotificationScreenState extends State<NotificationScreen>
                           ),
                         );
                     }
-                    notificationsBloc.getNotifications();
+                    notificationsBloc.getNotifications(FirebaseAuth.instance.currentUser.uid);
                   }
                   setState(() {});
                 },
