@@ -15,6 +15,7 @@ import 'package:management_of_scientific_research_project_of_ptithcm/repositorie
 import 'package:management_of_scientific_research_project_of_ptithcm/repositories/register_repository.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/repositories/topic_repository.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/repositories/user_repository.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/screens/main_screen/user_screen.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/screens/topic_screen.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/widgets/config/colors.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/widgets/config/strings.dart';
@@ -55,6 +56,7 @@ class _StatisticalScreenState extends State<StatisticalScreen> {
         child: Column(
           children: [
             _row2by2Widget(context),
+            statistedWidget(context),
             _buildChart(context),
             _gridListItems()
           ],
@@ -194,6 +196,85 @@ class _StatisticalScreenState extends State<StatisticalScreen> {
       children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
+          child: Text(
+            "Duyệt đề tài",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+        ),
+        Divider(
+          height: 8,
+          color: Colors.black,
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text("Chủ đề"),
+                flex: 4,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Container(
+                  width: 3,
+                  height: 20,
+                  color: Colors.grey,
+                ),
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text("Sinh viên đăng kí"),
+                ),
+                flex: 3,
+              ),
+            ],
+          ),
+        ),
+        Divider(
+          height: 8,
+          color: Colors.black,
+        ),
+        SizedBox(
+          height: MediaQuery.of(context).size.height * 0.4,
+          child: FutureBuilder<RegisterResponse>(
+              future: getInfoRegister(),
+              builder: (context, AsyncSnapshot<RegisterResponse> snapshot) {
+                if (!snapshot.hasData) {
+                  return SizedBox();
+                }
+                List<Register> registers = snapshot.data.registers
+                    .where((element) => element.browseTopic == 0)
+                    .toList();
+                print(registers.length);
+                return ListView.builder(
+                  itemCount: registers.length,
+                  itemBuilder: (context, int index) {
+                    return buildRegisterItem(registers[index], false);
+                  },
+                );
+              }),
+        ),
+        Divider(
+          height: 4,
+          color: Colors.black,
+        ),
+      ],
+    );
+  }
+
+  Widget statistedWidget(BuildContext context) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            "Đề tài đã duyệt",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
           child: Row(
             children: [
               Expanded(
@@ -223,22 +304,21 @@ class _StatisticalScreenState extends State<StatisticalScreen> {
           color: Colors.black,
         ),
         SizedBox(
-          height: 200,
+          height: MediaQuery.of(context).size.height * 0.4,
           child: FutureBuilder<RegisterResponse>(
               future: getInfoRegister(),
               builder: (context, AsyncSnapshot<RegisterResponse> snapshot) {
                 if (!snapshot.hasData) {
-                  return CircularProgressIndicator();
+                  return SizedBox();
                 }
-
                 List<Register> registers = snapshot.data.registers
-                    .where((element) => element.browseTopic == 0)
+                    .where((element) => element.browseTopic == 1)
                     .toList();
                 print(registers.length);
                 return ListView.builder(
                   itemCount: registers.length,
                   itemBuilder: (context, int index) {
-                    return buildRegisterItem(registers[index]);
+                    return buildRegisterItem(registers[index], true);
                   },
                 );
               }),
@@ -259,7 +339,7 @@ class _StatisticalScreenState extends State<StatisticalScreen> {
     return await UserRepository().getUserApi(idUser);
   }
 
-  Widget buildRegisterItem(Register register) {
+  Widget buildRegisterItem(Register register, bool isBrowsed) {
     Topic topic;
     UserApi userApi;
     return SizedBox(
@@ -276,6 +356,7 @@ class _StatisticalScreenState extends State<StatisticalScreen> {
                 )));
           },
           child: Card(
+            elevation: 5.0,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
@@ -290,7 +371,7 @@ class _StatisticalScreenState extends State<StatisticalScreen> {
                             future: getTopic(register.idTopic),
                             builder: (context, snapshot) {
                               if (!snapshot.hasData) {
-                                return CircularProgressIndicator();
+                                return SizedBox();
                               }
                               topic = snapshot.data;
                               return Padding(
@@ -310,18 +391,30 @@ class _StatisticalScreenState extends State<StatisticalScreen> {
                             future: getUser(register.idStudent),
                             builder: (context, snapshot) {
                               if (!snapshot.hasData) {
-                                return CircularProgressIndicator();
+                                return SizedBox();
                               }
 
                               userApi = snapshot.data;
 
-                              return Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 10),
-                                child: Text(
-                                  snapshot.data.name,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
+                              return GestureDetector(
+                                onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => UserScreen(
+                                              isNav: false,
+                                              idStudent: userApi.keyFirebase,
+                                            ))),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10),
+                                  child: Text(
+                                    snapshot.data.name,
+                                    style: TextStyle(
+                                      color: Colors.blue,
+                                    ),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 ),
                               );
                             }),
@@ -331,154 +424,158 @@ class _StatisticalScreenState extends State<StatisticalScreen> {
                   SizedBox(
                     height: 10,
                   ),
-                  Row(
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: GestureDetector(
-                          onTap: () async {
-                            //register
-                            await RegisterRepository()
-                                    .updaetRegisterBrowse(register.id)
-                                ? print("success")
-                                : print("failse");
+                  !isBrowsed
+                      ? Row(
+                          children: [
+                            Expanded(
+                              flex: 1,
+                              child: GestureDetector(
+                                onTap: () async {
+                                  //register
+                                  await RegisterRepository()
+                                          .updaetRegisterBrowse(register.id)
+                                      ? print("success")
+                                      : print("failse");
 
-                            // push notification
+                                  // push notification
 
-                            bool check = await NotificationRepository()
-                                .createNotification(Notifications(
-                              content:
-                                  "Yêu cầu đề tài bạn đã được duyêt.\nĐề tài ${topic.name}",
-                              image: topic.image,
-                              idStudent: userApi.keyFirebase,
-                              timeCreated: DateTime.now().toString(),
-                            ));
-                            if (check) {
-                              print("success noti");
-                            } else {
-                              print("false noti");
-                            }
+                                  bool check = await NotificationRepository()
+                                      .createNotification(Notifications(
+                                    content:
+                                        "Yêu cầu đề tài bạn đã được duyêt.\nĐề tài ${topic.name}",
+                                    image: topic.image,
+                                    idStudent: userApi.keyFirebase,
+                                    timeCreated: DateTime.now().toString(),
+                                  ));
+                                  if (check) {
+                                    print("success noti");
+                                  } else {
+                                    print("false noti");
+                                  }
 
-                            //create timeline
-                            await PeriodicReportRepository()
-                                    .createPeriodicReport(
-                              PeriodicReport(
-                                topicCode: topic.id.toString(),
-                                idStudent: userApi.keyFirebase,
-                                field: topic.field,
-                                content: topic.name,
-                                image: topic.image,
-                                dateStarted: DateTime.now().toString(),
-                                dateEnd: topic.acceptanceTime,
-                              ),
-                            )
-                                ? print("create timeline success")
-                                : print("create timeline false");
+                                  //create timeline
+                                  await PeriodicReportRepository()
+                                          .createPeriodicReport(
+                                    PeriodicReport(
+                                      topicCode: topic.id.toString(),
+                                      idStudent: userApi.keyFirebase,
+                                      field: topic.field,
+                                      content: topic.name,
+                                      image: topic.image,
+                                      dateStarted: DateTime.now().toString(),
+                                      dateEnd: topic.acceptanceTime,
+                                    ),
+                                  )
+                                      ? print("create timeline success")
+                                      : print("create timeline false");
 
-                            ScaffoldMessenger.of(context)
-                              ..removeCurrentSnackBar()
-                              ..showSnackBar(
-                                SnackBar(
-                                  content: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Text("Đã duyệt đề tài"),
-                                      Icon(
-                                        Icons.error,
-                                        color: Colors.redAccent,
+                                  ScaffoldMessenger.of(context)
+                                    ..removeCurrentSnackBar()
+                                    ..showSnackBar(
+                                      SnackBar(
+                                        content: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: <Widget>[
+                                            Text("Đã duyệt đề tài"),
+                                            Icon(
+                                              Icons.error,
+                                              color: Colors.redAccent,
+                                            ),
+                                          ],
+                                        ),
+                                        backgroundColor: Colors.black38,
                                       ),
-                                    ],
-                                  ),
-                                  backgroundColor: Colors.black38,
+                                    );
+                                  setState(() {});
+                                },
+                                child: Column(
+                                  children: [
+                                    Icon(Icons.playlist_add,
+                                        color: Colors.green),
+                                    Text(
+                                      "Duyệt",
+                                      style: TextStyle(fontSize: 8),
+                                    ),
+                                  ],
                                 ),
-                              );
-                            setState(() {});
-                          },
-                          child: Column(
-                            children: [
-                              Icon(Icons.playlist_add),
-                              Text(
-                                "Duyệt",
-                                style: TextStyle(fontSize: 8),
                               ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: GestureDetector(
-                          onTap: () async {
-                            if (await RegisterRepository()
-                                .deleteRegister(register.id)) {
-                              bool check = await NotificationRepository()
-                                  .createNotification(Notifications(
-                                content:
-                                    "Yêu cầu đề tài bạn đã bị từ chối.\nĐề tài ${topic.name}",
-                                image: topic.image,
-                                idStudent: userApi.keyFirebase,
-                                timeCreated: DateTime.now().toString(),
-                              ));
-                              if (check) {
-                                print("success noti");
-                              } else {
-                                print("false noti");
-                              }
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: GestureDetector(
+                                onTap: () async {
+                                  if (await RegisterRepository()
+                                      .deleteRegister(register.id)) {
+                                    bool check = await NotificationRepository()
+                                        .createNotification(Notifications(
+                                      content:
+                                          "Yêu cầu đề tài bạn đã bị từ chối.\nĐề tài ${topic.name}",
+                                      image: topic.image,
+                                      idStudent: userApi.keyFirebase,
+                                      timeCreated: DateTime.now().toString(),
+                                    ));
+                                    if (check) {
+                                      print("success noti");
+                                    } else {
+                                      print("false noti");
+                                    }
 
-                              ScaffoldMessenger.of(context)
-                                ..removeCurrentSnackBar()
-                                ..showSnackBar(
-                                  SnackBar(
-                                    content: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: <Widget>[
-                                        Text("Từ chối yêu cầu"),
-                                        Icon(
-                                          Icons.error,
-                                          color: Colors.redAccent,
+                                    ScaffoldMessenger.of(context)
+                                      ..removeCurrentSnackBar()
+                                      ..showSnackBar(
+                                        SnackBar(
+                                          content: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: <Widget>[
+                                              Text("Từ chối yêu cầu"),
+                                              Icon(
+                                                Icons.error,
+                                                color: Colors.redAccent,
+                                              ),
+                                            ],
+                                          ),
+                                          backgroundColor: Colors.black38,
                                         ),
-                                      ],
-                                    ),
-                                    backgroundColor: Colors.black38,
-                                  ),
-                                );
-                            } else {
-                              ScaffoldMessenger.of(context)
-                                ..removeCurrentSnackBar()
-                                ..showSnackBar(
-                                  SnackBar(
-                                    content: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: <Widget>[
-                                        Text("Lỗi"),
-                                        Icon(
-                                          Icons.error,
-                                          color: Colors.redAccent,
+                                      );
+                                  } else {
+                                    ScaffoldMessenger.of(context)
+                                      ..removeCurrentSnackBar()
+                                      ..showSnackBar(
+                                        SnackBar(
+                                          content: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: <Widget>[
+                                              Text("Lỗi"),
+                                              Icon(
+                                                Icons.error,
+                                                color: Colors.redAccent,
+                                              ),
+                                            ],
+                                          ),
+                                          backgroundColor: Colors.black38,
                                         ),
-                                      ],
-                                    ),
-                                    backgroundColor: Colors.black38,
-                                  ),
-                                );
-                            }
-                            setState(() {});
-                          },
-                          child: Column(
-                            children: [
-                              Icon(Icons.remove_circle),
-                              Text(
-                                "Từ chối",
-                                style: TextStyle(fontSize: 8),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
+                                      );
+                                  }
+                                  setState(() {});
+                                },
+                                child: Column(
+                                  children: [
+                                    Icon(Icons.remove_circle,
+                                        color: Colors.red),
+                                    Text(
+                                      "Từ chối",
+                                      style: TextStyle(fontSize: 8),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                      : SizedBox(),
                 ],
               ),
             ),

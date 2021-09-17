@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/controller/translations.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/screens/main_screen/home_screen.dart';
@@ -95,7 +96,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget>
                   return;
                 }
                 setState(() {
-                  tabBody = TimelinePage(title: "Timeline",);
+                  tabBody = TimelinePage(id: FirebaseAuth.instance.currentUser.uid,);
                 });
               });
             } else if (index == 2) {

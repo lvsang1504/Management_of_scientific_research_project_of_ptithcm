@@ -72,7 +72,7 @@ class _AddProcessItemState extends State<AddProcessItem> {
           future: TopicRepository().getTopicById(widget.idTopic),
           builder: (context, AsyncSnapshot<Topic> snapshot) {
             if (!snapshot.hasData) {
-              return SizedBox();
+              return Center(child: Text("Chưa đăng kí đề tài"));
             }
             return SingleChildScrollView(
               child: Padding(
@@ -87,6 +87,7 @@ class _AddProcessItemState extends State<AddProcessItem> {
                     Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: DateTimePicker(
+                        initialValue: '',
                         type: DateTimePickerType.dateTimeSeparate,
                         dateMask: 'd MMM, yyyy',
                         firstDate: DateTime(2000),
@@ -96,7 +97,7 @@ class _AddProcessItemState extends State<AddProcessItem> {
                         timeLabelText: '${translations.translate("time.hour")}',
                         selectableDayPredicate: (date) {
                           // Disable weekend days to select from the calendar
-                          if (date.weekday == 6 || date.weekday == 7) {
+                          if (date.weekday == 7) {
                             return false;
                           }
 
@@ -117,6 +118,7 @@ class _AddProcessItemState extends State<AddProcessItem> {
                     Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: DateTimePicker(
+                        initialValue: '',
                         type: DateTimePickerType.dateTimeSeparate,
                         dateMask: 'd MMM, yyyy',
                         firstDate: DateTime(2000),
@@ -126,7 +128,7 @@ class _AddProcessItemState extends State<AddProcessItem> {
                         timeLabelText: '${translations.translate("time.hour")}',
                         selectableDayPredicate: (date) {
                           // Disable weekend days to select from the calendar
-                          if (date.weekday == 6 || date.weekday == 7) {
+                          if (date.weekday == 7) {
                             return false;
                           }
 

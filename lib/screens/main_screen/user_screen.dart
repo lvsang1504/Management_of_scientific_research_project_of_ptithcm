@@ -16,6 +16,11 @@ import 'package:management_of_scientific_research_project_of_ptithcm/widgets/wid
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 
 class UserScreen extends StatefulWidget {
+  final bool isNav;
+  final String idStudent;
+
+  const UserScreen({Key key, this.isNav = true, this.idStudent})
+      : super(key: key);
   @override
   _UserScreenState createState() => _UserScreenState();
 }
@@ -33,7 +38,7 @@ class _UserScreenState extends State<UserScreen>
   TextEditingController _idStudentController = TextEditingController();
   TextEditingController _classController = TextEditingController();
   final _btnSaveController = RoundedLoadingButtonController();
-
+  UserApi user;
   @override
   void initState() {
     _controller = AnimationController(
@@ -168,30 +173,35 @@ class _UserScreenState extends State<UserScreen>
 
   @override
   Widget build(BuildContext context) {
-    usersBloc.getUsers(FirebaseAuth.instance.currentUser.uid ?? "");
+    usersBloc.getUsers(widget.isNav
+        ? FirebaseAuth.instance.currentUser.uid ?? ""
+        : widget.idStudent);
 
     return Scaffold(
-      floatingActionButton: Align(
-        alignment: Alignment.bottomLeft,
-        child: Padding(
-          padding: const EdgeInsets.only(left: 20, bottom: 50),
-          child: SizedBox(
-            height: 50,
-            width: 70,
-            child: RoundedLoadingButton(
-              //width: 70,
-              height: 40,
-              color: Colors.blue,
-              successColor: Colors.greenAccent,
-              child: Text("${translations.translate("save")}", style: TextStyle(color: Colors.white)),
-              controller: _btnSaveController,
-              onPressed: _onSaveInfo,
-            ),
-          ),
-        ),
-      ),
+      floatingActionButton: widget.isNav
+          ? Align(
+              alignment: Alignment.bottomLeft,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 20, bottom: 50),
+                child: SizedBox(
+                  height: 50,
+                  width: 70,
+                  child: RoundedLoadingButton(
+                    //width: 70,
+                    height: 40,
+                    color: Colors.blue,
+                    successColor: Colors.greenAccent,
+                    child: Text("${translations.translate("save")}",
+                        style: TextStyle(color: Colors.white)),
+                    controller: _btnSaveController,
+                    onPressed: _onSaveInfo,
+                  ),
+                ),
+              ),
+            )
+          : SizedBox(),
       backgroundColor: Theme.of(context).backgroundColor,
-      drawer: DrawerWidget(),
+      drawer: widget.isNav ? DrawerWidget() : null,
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -222,11 +232,12 @@ class _UserScreenState extends State<UserScreen>
                       ),
                     );
                   } else {
-                    UserApi user = snapshot.data;
+                    user = snapshot.data;
                     _nameController.text = user.name;
                     _idStudentController.text = user.idStudent;
                     _classController.text = user.classRoom;
                     _phoneController.text = user.phone;
+
                     return Form(
                       child: Padding(
                         padding: const EdgeInsets.all(20.0),
@@ -236,13 +247,15 @@ class _UserScreenState extends State<UserScreen>
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: TextFormField(
+                                enabled: widget.isNav,
                                 onChanged: (_) => _btnSaveController.reset(),
                                 controller: _nameController,
                                 decoration: InputDecoration(
                                   border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(20)),
                                   icon: Icon(Icons.perm_identity),
-                                  labelText: "${translations.translate("screen.user.name")}",
+                                  labelText:
+                                      "${translations.translate("screen.user.name")}",
                                 ),
                                 autovalidateMode:
                                     AutovalidateMode.onUserInteraction,
@@ -256,13 +269,15 @@ class _UserScreenState extends State<UserScreen>
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: TextFormField(
+                                enabled: widget.isNav,
                                 onChanged: (_) => _btnSaveController.reset(),
                                 controller: _idStudentController,
                                 decoration: InputDecoration(
                                   border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(20)),
                                   icon: Icon(Icons.code_rounded),
-                                  labelText: "${translations.translate("screen.user.idStudent")}",
+                                  labelText:
+                                      "${translations.translate("screen.user.idStudent")}",
                                 ),
                                 autovalidateMode:
                                     AutovalidateMode.onUserInteraction,
@@ -276,13 +291,15 @@ class _UserScreenState extends State<UserScreen>
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: TextFormField(
+                                enabled: widget.isNav,
                                 onChanged: (_) => _btnSaveController.reset(),
                                 controller: _classController,
                                 decoration: InputDecoration(
                                   border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(20)),
                                   icon: Icon(Icons.grade),
-                                  labelText: "${translations.translate("screen.user.class")}",
+                                  labelText:
+                                      "${translations.translate("screen.user.class")}",
                                 ),
                                 autovalidateMode:
                                     AutovalidateMode.onUserInteraction,
@@ -296,6 +313,7 @@ class _UserScreenState extends State<UserScreen>
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: TextFormField(
+                                  enabled: widget.isNav,
                                   onChanged: (_) => _btnSaveController.reset(),
                                   controller: _phoneController,
                                   decoration: InputDecoration(
@@ -303,7 +321,8 @@ class _UserScreenState extends State<UserScreen>
                                         borderRadius:
                                             BorderRadius.circular(20)),
                                     icon: Icon(Icons.phone),
-                                    labelText: "${translations.translate("screen.user.phone")}",
+                                    labelText:
+                                        "${translations.translate("screen.user.phone")}",
                                   ),
                                   keyboardType: TextInputType.phone,
                                   autovalidateMode:
@@ -321,15 +340,16 @@ class _UserScreenState extends State<UserScreen>
                                   border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(20)),
                                   icon: Icon(Icons.email),
-                                  labelText: "${translations.translate("screen.user.email")}",
+                                  labelText:
+                                      "${translations.translate("screen.user.email")}",
                                 ),
                                 keyboardType: TextInputType.emailAddress,
                                 autovalidate: true,
                                 autocorrect: false,
                                 enabled: false,
-                                initialValue:
-                                    FirebaseAuth.instance.currentUser.email ??
-                                        "null",
+                                initialValue: widget.isNav
+                                    ? FirebaseAuth.instance.currentUser.email
+                                    : user.email,
                               ),
                             ),
                           ],
@@ -355,8 +375,8 @@ class _UserScreenState extends State<UserScreen>
   Stack headerScreen(BuildContext context) {
     //UserRepository userRepository = UserRepository();
     getAvatar() async {
-      return await userRepository
-          .getPhoto('user/${FirebaseAuth.instance.currentUser.uid}');
+      return await userRepository.getPhoto(
+          'user/${widget.isNav ? FirebaseAuth.instance.currentUser.uid : widget.idStudent}');
     }
 
     return Stack(
@@ -384,12 +404,6 @@ class _UserScreenState extends State<UserScreen>
           child: AppBar(
             elevation: 0.0,
             backgroundColor: Colors.transparent,
-            actions: [
-              IconButton(
-                icon: Icon(Icons.edit),
-                onPressed: () => print("click edit"),
-              ),
-            ],
           ),
         ),
         Column(
@@ -440,46 +454,51 @@ class _UserScreenState extends State<UserScreen>
                                     ),
                             );
                           }),
-                      Align(
-                        alignment: Alignment.bottomRight,
-                        child: GestureDetector(
-                            onTap: () => imagePicker.showDialog(context),
-                            child: Container(
-                              padding: EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: Colors.black26,
-                                shape: BoxShape.circle,
-                              ),
-                              child: Icon(
-                                Icons.add_a_photo_outlined,
-                                size: 18,
-                                color: Colors.white54,
-                              ),
-                            )),
-                      ),
+                      widget.isNav
+                          ? Align(
+                              alignment: Alignment.bottomRight,
+                              child: GestureDetector(
+                                  onTap: () => imagePicker.showDialog(context),
+                                  child: Container(
+                                    padding: EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      color: Colors.black26,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Icon(
+                                      Icons.add_a_photo_outlined,
+                                      size: 18,
+                                      color: Colors.white54,
+                                    ),
+                                  )),
+                            )
+                          : SizedBox(),
                     ],
                   ),
                 ),
               ),
             ),
-            FutureBuilder<UserApi>(
-                future: getData(FirebaseAuth.instance.currentUser.uid),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return SizedBox();
-                  } else {
-                    var user = snapshot.data;
-                    return Text(
-                      user.name ?? "${translations.translate("account.username")}",
-                      style: TextStyle(fontSize: 22, color: Colors.white),
-                    );
-                  }
-                }),
+            widget.isNav
+                ? FutureBuilder<UserApi>(
+                    future: getData(FirebaseAuth.instance.currentUser.uid),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return SizedBox();
+                      } else {
+                        var user = snapshot.data;
+                        return Text(
+                          user.name ??
+                              "${translations.translate("account.username")}",
+                          style: TextStyle(fontSize: 22, color: Colors.white),
+                        );
+                      }
+                    })
+                : SizedBox(),
             SizedBox(
               height: 5,
             ),
             Text(
-              FirebaseAuth.instance.currentUser.email ?? "",
+              widget.isNav ? FirebaseAuth.instance.currentUser.email ?? "" : "",
               style: TextStyle(fontSize: 14, color: Colors.white38),
             ),
           ],

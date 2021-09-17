@@ -6,7 +6,7 @@ class AboutUsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String version = "0.0.1";
-    final String email = "n18dccn172@student.ptithcm.edu.vn";
+    final String email = "luongsang010s@gmail.com";
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -42,17 +42,29 @@ class AboutUsScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(10.0),
               child: Container(
-                child: Text("Version:    $version", style: kTitleStyle,),
+                child: Text("Version:    $version",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    )),
               ),
             ),
-            Divider(height: 2,),
+            Divider(
+              height: 2,
+            ),
             Padding(
               padding: const EdgeInsets.all(10.0),
               child: Container(
-                child: Text("Contact us: $email", style: kTitleStyle,),
+                child: Text("Contact us: $email",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    )),
               ),
             ),
-            Divider(height: 2,),
+            Divider(
+              height: 2,
+            ),
           ],
         ),
       ),

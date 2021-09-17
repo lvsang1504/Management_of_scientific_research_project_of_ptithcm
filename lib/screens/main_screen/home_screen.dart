@@ -4,9 +4,12 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/blocs/data_bloc/get_topics_bloc.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/controller/translations.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/models/register.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/models/topic.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/models/topic_response.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/models/user_api.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/repositories/register_repository.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/repositories/topic_repository.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/repositories/user_repository.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/screens/infonation_screen.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/screens/search_screen.dart';
@@ -160,6 +163,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             }
           }
 
+          Future<Register> getInfoRegister(String idStudent) async {
+            return await RegisterRepository().getRegisterStudentId(idStudent);
+          }
+
           return Scaffold(
             appBar: buildAppBar(context),
             drawer: DrawerWidget(),
@@ -186,7 +193,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                     (BuildContext context, int index) {
                                   return Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       getSearchBarUI(),
                                       FutureBuilder<int>(
@@ -198,16 +206,120 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
                                             return snapshot.data == 0
                                                 ? GridFunction()
-                                                : Padding(
-                                                  padding: const EdgeInsets.all(20.0),
-                                                  child: Text(
-                                                      "HELLO, ${user.hasData? user.data.name.split(" ").last:""}",
-                                                      style: TextStyle(
-                                                        fontSize: 20,
-                                                        fontWeight: FontWeight.bold,
+                                                : Column(
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(20.0),
+                                                        child: Text(
+                                                          "HELLO, ${user.hasData ? user.data.name.split(" ").last : ""}",
+                                                          style: TextStyle(
+                                                            fontSize: 20,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                        ),
                                                       ),
-                                                    ),
-                                                );
+                                                      FutureBuilder<Register>(
+                                                          future: getInfoRegister(
+                                                              FirebaseAuth
+                                                                  .instance
+                                                                  .currentUser
+                                                                  .uid),
+                                                          builder: (context,
+                                                              AsyncSnapshot<
+                                                                      Register>
+                                                                  register) {
+                                                            if (!register
+                                                                .hasData) {
+                                                              return SizedBox();
+                                                            }
+                                                            return Column(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .start,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                FutureBuilder<
+                                                                        Topic>(
+                                                                    future: TopicRepository().getTopicById(
+                                                                        register
+                                                                            .data
+                                                                            .idTopic),
+                                                                    builder: (context,
+                                                                        AsyncSnapshot<Topic>
+                                                                            topic) {
+                                                                      if (!topic
+                                                                          .hasData) {
+                                                                        return SizedBox();
+                                                                      }
+                                                                      return Container(
+                                                                        child:
+                                                                            Column(
+                                                                          mainAxisAlignment:
+                                                                              MainAxisAlignment.start,
+                                                                          crossAxisAlignment:
+                                                                              CrossAxisAlignment.start,
+                                                                          children: [
+                                                                            Divider(),
+                                                                            Padding(
+                                                                              padding: const EdgeInsets.symmetric(horizontal: 8),
+                                                                              child: register.data.browseTopic == 1 && register.data.browseTopic != -1
+                                                                                  ? Text(
+                                                                                      "Đề tài đã đăng ký: ",
+                                                                                      style: TextStyle(color: Colors.redAccent),
+                                                                                    )
+                                                                                  : Text(
+                                                                                      "Đề tài đang chờ được duyệt: ",
+                                                                                      style: TextStyle(color: Colors.redAccent),
+                                                                                    ),
+                                                                            ),
+                                                                            Padding(
+                                                                              padding: const EdgeInsets.all(8.0),
+                                                                              child: Text(
+                                                                                "${topic.data.name}",
+                                                                                style: TextStyle(fontWeight: FontWeight.w400),
+                                                                              ),
+                                                                            ),
+                                                                            Divider(),
+                                                                            GestureDetector(
+                                                                              onTap: () => Navigator.push(
+                                                                                  context,
+                                                                                  MaterialPageRoute(
+                                                                                      builder: (context) => TopicScreen(
+                                                                                            topic: topic.data,
+                                                                                          ))),
+                                                                              child: Padding(
+                                                                                padding: const EdgeInsets.all(8),
+                                                                                child: Row(
+                                                                                  children: [
+                                                                                    Text(
+                                                                                      "Đến đề tài",
+                                                                                      style: TextStyle(color: Colors.redAccent),
+                                                                                    ),
+                                                                                    SizedBox(
+                                                                                      width: 10,
+                                                                                    ),
+                                                                                    Icon(
+                                                                                      Icons.exit_to_app,
+                                                                                      color: Colors.redAccent,
+                                                                                    )
+                                                                                  ],
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                      );
+                                                                    }),
+                                                              ],
+                                                            );
+                                                          }),
+                                                    ],
+                                                  );
                                           }),
                                     ],
                                   );
@@ -228,38 +340,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                           body: buildTopics(),
                         ),
                       ),
-                      // FutureBuilder<UserApi>(
-                      //     future:
-                      //         getUser(FirebaseAuth.instance.currentUser.uid),
-                      //     builder: (context, snapshot) {
-                      //       if (snapshot.connectionState ==
-                      //           ConnectionState.done) {
-                      //         if (snapshot.data != null) {
-                      //           return Container();
-                      //         } else {
-                      //           return  AlertDialog(
-                      //             content: Text(
-                      //               'Message Here',
-                      //             ),
-                      //             actions: <Widget>[
-                      //               GestureDetector(
-                      //                 child: const Text('OK'),
-                      //                 onTap: () {
-                      //                   Navigator.pushReplacement(
-                      //                     context,
-                      //                     MaterialPageRoute(
-                      //                       builder: (context) =>
-                      //                           InfomationScreen(),
-                      //                     ),
-                      //                   );
-                      //                 },
-                      //               ),
-                      //             ],
-                      //           );
-                      //         }
-                      //       }
-                      //       return Container();
-                      //     }),
                     ],
                   ),
                 ),

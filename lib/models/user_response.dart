@@ -9,8 +9,8 @@ class UserResponse {
     this.error,
   );
 
-  UserResponse.fromJson(Map<String, dynamic> json)
-      : users = (json as List).map((e) => UserApi.fromJson(e)).toList(),
+  UserResponse.fromJson(List< dynamic> json)
+      : users = json.map((e) => UserApi.fromJson(e)).toList(),
         error = "";
   UserResponse.withError(String error)
       : users = [],

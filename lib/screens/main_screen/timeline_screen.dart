@@ -13,9 +13,13 @@ import 'package:management_of_scientific_research_project_of_ptithcm/widgets/tim
 import '../add_process_item.dart';
 
 class TimelinePage extends StatefulWidget {
-  TimelinePage({Key key, this.title}) : super(key: key);
-  final String title;
-
+  TimelinePage({
+    Key key,
+    this.isAdmin = false,
+    @required this.id,
+  }) : super(key: key);
+  final bool isAdmin;
+  final String id;
   @override
   _TimelinePageState createState() => _TimelinePageState();
 }
@@ -26,7 +30,7 @@ class _TimelinePageState extends State<TimelinePage>
       PageController(initialPage: 1, keepPage: true);
   int pageIx = 1;
 
-  int idTopic=0;
+  int idTopic = 0;
 
   Future<PeriodicReportResponse> getData(String key) async {
     var periodicReportResponse =
@@ -55,7 +59,7 @@ class _TimelinePageState extends State<TimelinePage>
 
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
-      drawer: DrawerWidget(),
+      drawer: widget.isAdmin ? null : DrawerWidget(),
       appBar: AppBar(
         centerTitle: true,
         title: Text(
@@ -71,14 +75,20 @@ class _TimelinePageState extends State<TimelinePage>
         backgroundColor: Colors.transparent,
         elevation: 0.0,
         actions: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: GestureDetector(
-              child: Icon(Icons.add),
-              onTap: () => Navigator.push(
-                  context, AnimatingRoute(router: AddProcessItem(idTopic: idTopic,))),
-            ),
-          ),
+          !widget.isAdmin
+              ? Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: GestureDetector(
+                    child: Icon(Icons.add),
+                    onTap: () => Navigator.push(
+                        context,
+                        AnimatingRoute(
+                            router: AddProcessItem(
+                          idTopic: idTopic,
+                        ))),
+                  ),
+                )
+              : SizedBox(),
         ],
         bottom: PreferredSize(
           preferredSize: Size(30.0, 30.0),
@@ -112,7 +122,7 @@ class _TimelinePageState extends State<TimelinePage>
         ),
       ),
       body: FutureBuilder<PeriodicReportResponse>(
-          future: getData(FirebaseAuth.instance.currentUser.uid),
+          future: getData(widget.id),
           builder: (context, AsyncSnapshot<PeriodicReportResponse> snapshot) {
             if (!snapshot.hasData) {
               return Center(
@@ -129,14 +139,10 @@ class _TimelinePageState extends State<TimelinePage>
               //timelineModel(TimelinePosition.Right, snapshot.data);
             }
 
-            
-
-            idTopic  =  int.parse(snapshot.data.periodicReports[0].topicCode);
-
-            if (snapshot.data.periodicReports.length == 0) {
+            if (snapshot.data.periodicReports.isEmpty) {
               return Center(
                 child: Text(
-                  "Bạn chưa đăng kí đề tài nào.",
+                  "Chưa đăng kí đề tài.",
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
@@ -144,6 +150,8 @@ class _TimelinePageState extends State<TimelinePage>
                 ),
               );
             }
+            idTopic =
+                int.parse(snapshot.data.periodicReports[0].topicCode) ?? 0;
             return TabBarView(
               controller: _tabController,
               children: [
@@ -191,7 +199,12 @@ class _TimelinePageState extends State<TimelinePage>
                       const SizedBox(
                         height: 8.0,
                       ),
-                      Text(reportResponses.dateStarted ?? "sad",
+                      Text("Từ: ${reportResponses.dateStarted ?? "N/A"}",
+                          style: textTheme.caption),
+                      const SizedBox(
+                        height: 8.0,
+                      ),
+                      Text("Đến: ${reportResponses.dateEnd ?? "N/A"}",
                           style: textTheme.caption),
                       const SizedBox(
                         height: 8.0,

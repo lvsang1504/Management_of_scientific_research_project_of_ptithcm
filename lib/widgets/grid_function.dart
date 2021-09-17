@@ -4,6 +4,7 @@ import 'package:management_of_scientific_research_project_of_ptithcm/controller/
 import 'package:management_of_scientific_research_project_of_ptithcm/controller/translations.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/screens/add_topic_screen.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/screens/statistical_screen.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/screens/user_controll_screen.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/widgets/scroll_text.dart';
 
 class GridFunction extends StatefulWidget {
@@ -58,9 +59,9 @@ class _GridFunctionState extends State<GridFunction> {
                           ),
                           ItemButton(
                             icon: Icons.approval,
-                            title:
-                                "${translations.translate("funtion.name.approve")}",
-                           
+                            title: "Người dùng",
+                            onTap: () => Navigator.push(context,
+                                AnimatingRoute(router: UserControllScreen())),
                           ),
                           ItemButton(
                             icon: Icons.search_sharp,

@@ -6,6 +6,8 @@ import 'package:http/http.dart' as http;
 import 'package:management_of_scientific_research_project_of_ptithcm/models/user_api.dart';
 import 'dart:convert' as convert;
 
+import 'package:management_of_scientific_research_project_of_ptithcm/models/user_response.dart';
+
 class UserRepository {
   final FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
@@ -92,10 +94,9 @@ class UserRepository {
       if (response.statusCode == 200) {
         final jsonResponse = convert.jsonDecode(response.body);
         return UserApi.fromJson(jsonResponse);
-      } else if(response.statusCode == 404){
+      } else if (response.statusCode == 404) {
         print("Not found!");
-      }
-      else {
+      } else {
         throw Exception('Failed to load post');
       }
     } catch (error, stacktrace) {
@@ -143,6 +144,26 @@ class UserRepository {
     } catch (error, stacktrace) {
       print("Exception occured: $error stackTrace: $stacktrace");
       return false;
+    }
+  }
+
+  Future<UserResponse> getUsers() async {
+    try {
+      //https://ptithcm.azurewebsites.net/api/topics
+      // final response =
+      //     await http.get(Uri.parse('https://ptithcm.azurewebsites.net/api/topics'));
+      final response =
+          await http.get(Uri.parse('https://10.0.2.2:5001/api/users'));
+
+      if (response.statusCode == 200) {
+        final jsonResponse = convert.jsonDecode(response.body);
+        return UserResponse.fromJson(jsonResponse);
+      } else {
+        throw Exception('Failed to load post');
+      }
+    } catch (error, stacktrace) {
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return UserResponse.withError("$error");
     }
   }
 }
