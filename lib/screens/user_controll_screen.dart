@@ -72,14 +72,16 @@ class _UserControllScreenState extends State<UserControllScreen> {
                                           'user/${users[index].keyFirebase}'),
                                       builder:
                                           (context, AsyncSnapshot<String> img) {
-                                        if (!img.hasData) return SizedBox();
+                                        if (!img.hasData)
+                                          return CachedNetworkImage(
+                                              imageUrl: imageUrlLogo);
 
                                         return CachedNetworkImage(
                                             imageUrl: img.data ?? imageUrlLogo);
                                       }),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.all(15.0),
+                                  padding: const EdgeInsets.all(8.0),
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -95,7 +97,9 @@ class _UserControllScreenState extends State<UserControllScreen> {
                                       Text(
                                         users[index].role == 1
                                             ? "Người dùng"
-                                            : "Quản trị viên",
+                                            : users[index].role == 0
+                                                ? "Quản trị viên"
+                                                : "Giảng viên",
                                         style: TextStyle(
                                           color: Colors.grey,
                                         ),
@@ -104,7 +108,7 @@ class _UserControllScreenState extends State<UserControllScreen> {
                                   ),
                                 ),
                                 Spacer(),
-                                users[index].role == 1
+                                users[index].role == 1 || users[index].role == 2
                                     ? GestureDetector(
                                         onTap: () => Navigator.push(
                                             context,

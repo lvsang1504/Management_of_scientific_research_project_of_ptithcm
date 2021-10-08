@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:management_of_scientific_research_project_of_ptithcm/animation/animation_route.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/blocs/data_bloc/get_topics_bloc.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/controller/translations.dart';
 import 'package:management_of_scientific_research_project_of_ptithcm/models/register.dart';
@@ -19,6 +20,8 @@ import 'package:management_of_scientific_research_project_of_ptithcm/widgets/gri
 import 'package:management_of_scientific_research_project_of_ptithcm/widgets/topic_list_view.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../add_topic_screen.dart';
 
 int countFound;
 
@@ -212,13 +215,31 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                                         padding:
                                                             const EdgeInsets
                                                                 .all(20.0),
-                                                        child: Text(
-                                                          "HELLO, ${user.hasData ? user.data.name.split(" ").last : ""}",
-                                                          style: TextStyle(
-                                                            fontSize: 20,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                          ),
+                                                        child: Row(
+                                                          children: [
+                                                            Text(
+                                                              "HELLO, ${user.hasData ? user.data.name.split(" ").last : ""}",
+                                                              style: TextStyle(
+                                                                fontSize: 20,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
+                                                            ),
+                                                            user.hasData
+                                                                ? Text(
+                                                                    snapshot.data == 1? " - Sinh viên" : " - Giảng viên",
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontSize:
+                                                                          14,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w200,
+                                                                    ),
+                                                                  )
+                                                                : SizedBox(),
+                                                          ],
                                                         ),
                                                       ),
                                                       FutureBuilder<Register>(
@@ -337,7 +358,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                               ),
                             ];
                           },
-                          body: buildTopics(),
+                          body: buildTopics(user.data),
                         ),
                       ),
                     ],
@@ -349,7 +370,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         });
   }
 
-  Widget buildTopics() {
+  Widget buildTopics(UserApi user) {
     final spinkit = SpinKitCircle(
       color: Colors.cyan,
       size: 50.0,
@@ -450,7 +471,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                                 FadeTransition(
                                                     opacity: animation1,
                                                     child: TopicScreen(
-                                                      topic: topics[index],
+                                                      topic: topics[index], user: user,
                                                     ))),
                                   );
                                 },
@@ -523,13 +544,19 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                     color: Theme.of(context).accentColor,
                                   ),
                           ),
-                          // SizedBox(width: 8),
-                          // GestureDetector(
-                          //     onTap: () {},
-                          //     child: Icon(
-                          //       Icons.filter_list_outlined,
-                          //       color: Theme.of(context).accentColor,
-                          //     )),
+                          SizedBox(width: 8),
+                          GestureDetector(
+                              onTap: ()  => Navigator.push(context,
+                                AnimatingRoute(router: AddTopicScreen())),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.add,
+                                    color: Theme.of(context).accentColor,
+                                  ),
+                                  Text("Thêm đề tài", style: TextStyle(color: Colors.blueAccent),)
+                                ],
+                              )),
                         ],
                       ),
                     ),

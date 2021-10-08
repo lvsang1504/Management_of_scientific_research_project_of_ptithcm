@@ -211,7 +211,7 @@ class _TimelinePageState extends State<TimelinePage>
                       ),
                       Text(
                         reportResponses.content,
-                        style: textTheme.title,
+                        style: textTheme.bodyText1,
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(

@@ -166,4 +166,24 @@ class UserRepository {
       return UserResponse.withError("$error");
     }
   }
+
+   Future<UserResponse> getUsersByIdRole(int id) async {
+    try {
+      //https://ptithcm.azurewebsites.net/api/topics
+      // final response =
+      //     await http.get(Uri.parse('https://ptithcm.azurewebsites.net/api/topics'));
+      final response =
+          await http.get(Uri.parse('https://10.0.2.2:5001/api/users/role=$id'));
+
+      if (response.statusCode == 200) {
+        final jsonResponse = convert.jsonDecode(response.body);
+        return UserResponse.fromJson(jsonResponse);
+      } else {
+        throw Exception('Failed to load post');
+      }
+    } catch (error, stacktrace) {
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return UserResponse.withError("$error");
+    }
+  }
 }

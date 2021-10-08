@@ -24,6 +24,7 @@ class _InfomationScreenState extends State<InfomationScreen>
   final TextEditingController _idStudentController = TextEditingController();
   final TextEditingController _classController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
+  int _value = 1;
 
   ImagePickerHandler imagePicker;
   String imageUrl;
@@ -68,7 +69,7 @@ class _InfomationScreenState extends State<InfomationScreen>
   void _onSaveInfo() async {
     if (isValidInfo()) {
       final userApi = UserApi(
-        role: 1,
+        role: _value,
         email: FirebaseAuth.instance.currentUser.email,
         name: _nameController.text.trim().toUpperCase(),
         classRoom: _classController.text.trim().toUpperCase(),
@@ -96,8 +97,8 @@ class _InfomationScreenState extends State<InfomationScreen>
           );
         _btnSaveController.success();
         Timer(Duration(milliseconds: 1200), () {
-          Navigator.pushReplacement(context,
-                            AnimatingRoute(router: SplashScreen()));
+          Navigator.pushReplacement(
+              context, AnimatingRoute(router: SplashScreen()));
         });
       } else {
         ScaffoldMessenger.of(context)
@@ -342,6 +343,57 @@ class _InfomationScreenState extends State<InfomationScreen>
                         enabled: false,
                         initialValue:
                             FirebaseAuth.instance.currentUser.email ?? "null",
+                      ),
+                      SizedBox(height: 10,),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              "Bạn là: ",
+                              style: Theme.of(context).textTheme.bodyText2,
+                            ),
+                          ),
+                          ListTile(
+                            title: Text(
+                              'Sinh Viên',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .subtitle1
+                                  .copyWith(color: Colors.blueAccent),
+                            ),
+                            leading: Radio(
+                              value: 1,
+                              groupValue: _value,
+                              onChanged: (int value) {
+                                setState(() {
+                                  _value = value;
+                                  print(_value);
+                                });
+                              },
+                            ),
+                          ),
+                          ListTile(
+                            title: Text(
+                              'Giảng Viên',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .subtitle1
+                                  .copyWith(color: Colors.blueAccent),
+                            ),
+                            leading: Radio(
+                              value: 2,
+                              groupValue: _value,
+                              onChanged: (int value) {
+                                setState(() {
+                                  _value = value;
+                                  print(_value);
+                                });
+                              },
+                            ),
+                          ),
+                        ],
                       ),
                       Padding(
                         padding: const EdgeInsets.all(10.0),
